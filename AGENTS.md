@@ -62,32 +62,12 @@ chcp 65001 > $null;
 
 → `/agents/coding-style.md`
 
-## テストガイド（Unit/E2E）
-
-→ `/agents/testing-guidelines.md`
-
-## コミットメッセージ／PR ルール
-
-→ `/agents/commit-convention.md`
-
 ## フロントエンド（Vue / Vite / Tailwind）
 
 → `/agents/frontend-guidelines.md`
 
 ## バックエンド（API / サーバーレス）
 
-→ `/agents/backend-guidelines.md`
-
-## インフラ（AWS / Terraform / CI/CD）
-
-→ `/agents/infra-guidelines.md`
-
-## セキュリティルール
-
-→ `/agents/security-rules.md`
-
-## 設計思想・アーキテクチャ指針
-
-→ `/agents/architecture.md`
+→ `/agents/backend-guidelines.md`A
 
 ---
