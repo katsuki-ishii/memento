@@ -2,8 +2,8 @@
 
 ## 全体像
 
-- フロント: Vue 3 + Vite + TS + Tailwind。認証は Cognito PKCE。API は REST。
-- バック: API Gateway(REST) → Lambda(Node 22) → DynamoDB 単一テーブル設計（PK/SK）。
+- フロント: Vue 3 + Vite + JavaScript + Tailwind。認証は Cognito PKCE。API は REST。
+- バック: API Gateway(REST) → Lambda(Node 22, JS) → DynamoDB 単一テーブル設計（PK/SK）。
 - デプロイ: 手動（個人開発）。CI は lint/format のみ。
 
 ## ドメイン（案）

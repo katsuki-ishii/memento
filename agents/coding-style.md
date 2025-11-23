@@ -2,14 +2,14 @@
 
 ## 言語・共通
 
-- TypeScript/ES2022, ESM。インデント2スペース、シングルクォート、セミコロンあり、トレーリングカンマ推奨。
+- JavaScript ES2022, ESM。インデント2スペース、シングルクォート、セミコロンあり、トレーリングカンマ推奨。
 - Prettier で整形、ESLint で静的解析（`npm run format` / `npm run lint`）。
-- ファイル名: コンポーネント PascalCase (`ProgressGrid.vue`)、Composable `useX.ts`、ユーティリティは `verb-noun.ts`。
+- ファイル名: コンポーネント PascalCase (`ProgressGrid.vue`)、Composable `useX.js`、ユーティリティは `verb-noun.js`。
 
 ## Vue (Composition API)
 
-- `script setup` 推奨。Props/emit を型定義し、`defineProps`/`defineEmits` を使用。
-- 状態は Pinia ストアまたはローカル state。グローバルな副作用を避け、Composable で共通化。
+- `script setup` 推奨。props/emit を型付けしたい場合は JSDoc で注釈。
+- 状態は Pinia ストアまたはローカル state。グローバル副作用を避け、Composable で共通化。
 - コンポーネント分割は「1責務」。重い計算は `computed`、非同期は `async` 関数＋ローディング/エラー状態を明示。
 
 ## スタイル/Tailwind

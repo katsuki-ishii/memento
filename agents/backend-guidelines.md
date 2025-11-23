@@ -2,7 +2,7 @@
 
 ## 前提
 
-- サーバーレス（API Gateway REST → Lambda(Node.js) → DynamoDB）。デプロイは手動を想定。
+- サーバーレス（API Gateway REST → Lambda(Node.js 22, JS) → DynamoDB）。デプロイは手動を想定。
 
 ## ハンドラ設計
 
@@ -17,4 +17,4 @@
 
 ## セキュリティ
 
-- JWT 検証（Cognito public keys）。入力はサニタイズ/検証（zod 等）。
+- JWT 検証（Cognito public keys）。入力はサニタイズ/検証（バリデーションライブラリを使用）。
