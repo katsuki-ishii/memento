@@ -1,31 +1,47 @@
-# データモデル & API ラフ案
+# API ラフ案（REST）
 
-## エンティティ（DynamoDB 想定）
+## 認証
 
-- UserSettings: PK `USER#<sub>`, SK `SETTINGS`; fields: username, birthYear, lifespan, weekStart (mon), theme.
-- Event: PK `USER#<sub>`, SK `EVENT#<timestamp>`; fields: weekId, mood, note, createdAt.
+- Cognito Hosted UI + PKCE。
+- Authorization: Bearer <access_token> を各リクエストに付与。
 
-## アクセスパターン / PK-SK 設計
+## エンドポイント
 
-- Get settings: PK=`USER#<sub>`, SK=`SETTINGS`
-- Upsert settings: same key (PUT/UPDATE)
-- List events by week: PK=`USER#<sub>`, SK begins_with `EVENT#` + filter on weekId (または GSI)
-- Get event by id: PK=`USER#<sub>`, SK=`EVENT#<timestamp>`
-- Delete event: same key delete
+### GET /me/settings
 
-### GSI 案 (必要に応じて)
+- 応答: `{ "username": "", "birthYear": 1990, "lifespan": 85, "weekStart": "mon", "theme": "light" }`
 
-- GSI1 (by week): PK=`WEEK#<weekId>`, SK=`USER#<sub>#EVENT#<timestamp>` を Event に持たせる
-  - クエリ: 週に紐づくイベント一覧（ユーザー単位 or 複数ユーザー拡張の余地）
+### PATCH /me/settings
 
-## REST エンドポイント（骨子）
+- 入力: 同上フィールド（部分更新可）。
+- バリデーション: username/note 長さ、birthYear/lifespan の範囲、weekStart は mon 固定予定。
 
-- GET /me/settings, PATCH /me/settings
-- GET /events?weekId=<number>, POST /events, PATCH /events/{id}, DELETE /events/{id}
-- (認証) Cognito Hosted UI + PKCE, トークンは Authorization: Bearer で送信
+### GET /events?weekId=<number>
+
+- 誕生日起点の週IDでフィルタし、配列を返す。
+- 応答例: `[{ "id": "EVENT#1714123456789", "weekId": 1200, "title": "", "mood": "neutral", "note": "", "createdAt": 1714123456789 }]`
+
+### POST /events
+
+- 入力: `{ "weekId": number, "title": string, "mood": "very-bad"|"bad"|"neutral"|"good"|"very-good", "note": string }`
+- 応答: 作成したイベント（id 付き）。
+
+### PATCH /events/{id}
+
+- 入力: POST と同じフィールドの部分更新。
+- id は `EVENT#<timestamp>` 形式。
+
+### DELETE /events/{id}
+
+- 成功時 204。
 
 ## バリデーション / 計算メモ
 
-- weekId: 誕生日起点での経過日数を7で割った整数（JST、週開始は月曜）。
-- event id: `timestamp`（ミリ秒）を SK に付与し一意にする。
-- note 長さ制限とサニタイズを行う。
+- weekId: JST、週開始は月曜。誕生日からの経過日数を7で割った整数。
+- id: Lambda 側で `EVENT#<timestamp>` を採番。
+- title/note: 長さ上限を設定（例: title 100文字、note 1000文字）。
+- mood: 定義済み列挙に限定。
+
+## データモデル
+
+- 詳細な PK/SK/GSI は `data-model.md` を参照。

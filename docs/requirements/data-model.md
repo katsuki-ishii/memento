@@ -5,7 +5,7 @@
 - 名前案: `Memento`
 - パーティションキー (PK): `pk`
 - ソートキー (SK): `sk`
-- 主要属性: `weekId` (number), `username`, `birthYear`, `lifespan`, `weekStart`, `theme`, `mood`, `note`, `createdAt`
+- 主要属性: `weekId` (number), `username`, `birthYear`, `lifespan`, `weekStart`, `theme`, `title`, `mood`, `note`, `createdAt`
 - TTL: 任意（現状なし）
 
 ## エンティティとキー
@@ -18,7 +18,7 @@
 - Event
   - pk: `USER#<sub>`
   - sk: `EVENT#<timestamp>` (timestamp ms for uniqueness)
-  - attrs: weekId, mood, note, createdAt
+  - attrs: title, weekId, mood, note, createdAt
 
 ## GSI（週別イベント一覧用）
 
