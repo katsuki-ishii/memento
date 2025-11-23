@@ -1,18 +1,93 @@
-AI エージェント向け作業指示（PowerShell / NoProfile）
+# AGENTS.md
 
-- 適用範囲: このファイルが置かれたフォルダ配下すべて。
+AI エージェント向け共通ガイドライン
+（このリポジトリで作業するすべての AI エージェントが対象）
 
-- UTF-8 実行ラッパ（必須・毎回付与）
-  - 形式（`<COMMAND>` を実コマンドに置換）:
-    - `[Console]::InputEncoding=[Text.UTF8Encoding]::new($false); [Console]::OutputEncoding=[Text.UTF8Encoding]::new($false); $OutputEncoding=[Text.UTF8Encoding]::new($false); chcp 65001 > $null; & { <COMMAND> }`
+# Core Rules（基礎レイヤー）
 
-- ファイル書き込みの Encoding 指定（必須）
-  - `Out-File -Encoding utf8` / `Set-Content -Encoding utf8` / `Add-Content -Encoding utf8`
+このリポジトリ配下で作業するエージェントは、以下を必ず遵守する。
 
-- 出力言語
-  - 基本は日本語
-  - 英語でプロンプトを与えたときは英語で返すこと
+## 適用範囲
 
-- プロンプトの実行にあたり前提がわからなければ実行の前に質問すること。
-- 本格的なプロダクトを作るのではなく、趣味及び学習目的の個人開発。
-- 学習を自分の会社のチーム開発に生かす。
+- この AGENTS.md が置かれたフォルダ配下すべてに適用する。
+- 下層ディレクトリに AGENTS.md またはガイドがある場合、**その内容がこのルールを上書きする**。
+
+## PowerShell（NoProfile）での実行ルール
+
+Windows 環境での動作安定を保証するため、PowerShell を使用する場合は以下の設定を必須とする。
+
+### UTF-8 実行ラッパ（必須）
+
+```
+[Console]::InputEncoding=[Text.UTF8Encoding]::new($false);
+[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false);
+$OutputEncoding=[Text.UTF8Encoding]::new($false);
+chcp 65001 > $null;
+& { <COMMAND> }
+```
+
+`<COMMAND>` を実行したいコマンドへ置き換えて使用する。
+
+### ファイル書き込み時の Encoding ルール
+
+- `Out-File -Encoding utf8`
+- `Set-Content -Encoding utf8`
+- `Add-Content -Encoding utf8`
+
+※ Encoding の明示は必須とする。
+
+## 出力言語ルール
+
+- 通常は **日本語** を使用する。
+- 英語でプロンプトを受けた場合は **英語で返す**。
+
+## 不明点がある場合は必ず確認する
+
+- 実行前提が不明な場合、推測で作業せず、**実行前に必ず質問して確認すること**。
+- 危険な操作（削除・破壊・上書き）は必ず確認を取る。
+
+## このプロジェクトの性質
+
+- 趣味および学習目的の個人開発である。
+- 得た知見や実装アイデアは **チーム開発へ還元するための実験場** として活用する。
+- 本番利用を前提としないが、品質向上のための丁寧な実装を推奨する。
+
+---
+
+# 2. Componentized Guides（詳細ガイドの参照）
+
+詳細ルールは、役割ごとにコンポーネント化されたドキュメントを参照する。
+
+## コーディング規約
+
+→ `/agents/coding-style.md`
+
+## テストガイド（Unit/E2E）
+
+→ `/agents/testing-guidelines.md`
+
+## コミットメッセージ／PR ルール
+
+→ `/agents/commit-convention.md`
+
+## フロントエンド（Vue / Vite / Tailwind）
+
+→ `/agents/frontend-guidelines.md`
+
+## バックエンド（API / サーバーレス）
+
+→ `/agents/backend-guidelines.md`
+
+## インフラ（AWS / Terraform / CI/CD）
+
+→ `/agents/infra-guidelines.md`
+
+## セキュリティルール
+
+→ `/agents/security-rules.md`
+
+## 設計思想・アーキテクチャ指針
+
+→ `/agents/architecture.md`
+
+---
