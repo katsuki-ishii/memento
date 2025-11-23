@@ -2,9 +2,9 @@
 
 ## エンティティ（DynamoDB 想定）
 
-- UserSettings: PK `USER#<sub>`, SK `SETTINGS`; fields: birthYear, lifespan, weekStart, theme.
+- UserSettings: PK `USER#<sub>`, SK `SETTINGS`; fields: username, birthYear, lifespan, weekStart, theme.
 - Goal: PK `USER#<sub>`, SK `GOAL#<id>`; fields: title, category, targetYearWeek, status, createdAt.
-- Event: PK `USER#<sub>`, SK `EVENT#<timestamp>`; fields: week, tags[], mood, note, createdAt.
+- Event: PK `USER#<sub>`, SK `EVENT#<timestamp>`; fields: week, , mood, note, createdAt.
 
 ## REST エンドポイント（骨子）
 
