@@ -25,12 +25,12 @@
     - [x] ESLint + Prettier 設定（Vue/JS 用）
 - [ ] 要件・UX確定
   - [ ] スコープ整理
-    - [ ] MVP / 非MVP を docs/requirements/mvp.md で切り分け
-    - [ ] 用語集とユーザーストーリーを docs/requirements で確定
+    - [x] MVP / 非MVP を docs/requirements/mvp.md で切り分け
+    - [x] 用語集とユーザーストーリーを docs/requirements で確定
   - [ ] UX成果物
-    - [ ] 主要画面ラフ（docs/requirements/ux.md）
+    - [x] 主要画面ラフ（docs/requirements/ux.md）
     - [ ] 画面遷移図・フロー
-    - [ ] 非機能要件ドラフト（性能・コスト・監視）
+    - [x] 非機能要件ドラフト（性能・コスト・監視）
 - [ ] 設計
   - [ ] API/契約
     - [ ] OpenAPIドラフト作成
@@ -47,9 +47,9 @@
     - [ ] Tailwind 設定
     - [ ] Vitest 導入
   - [ ] 設定/環境
-    - [ ] `.env.example` 作成
-    - [ ] lint/format スクリプト追加
-    - [ ] pre-commit で lint/format/test 実行
+    - [x] `.env.example` 作成
+    - [x] lint/format スクリプト追加
+    - [ ] pre-commit で lint/format/test 実行（lint/format は実行済み、test は未設定）
   - [ ] ランタイム確認
     - [ ] `npm run dev` 起動確認
     - [ ] `npm run test` 簡易実行
@@ -99,7 +99,7 @@
     - [ ] CloudWatch ログ/アラーム設計
     - [ ] エラートラッキング設定
   - [ ] 信頼性
-    - [ ] DynamoDB PITR/バックアップ手順
+    - [ ] DynamoDB PITR/バックアップ手順（AWS CLI で実施予定）
     - [ ] ロールバック手順
 - [ ] リスクと対応
   - [ ] 認証フロー複雑化 → 初期は Email/Password + PKCE に限定
