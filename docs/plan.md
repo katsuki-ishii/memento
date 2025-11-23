@@ -77,13 +77,15 @@
   - [ ] 認証/認可
     - [ ] Cognito JWT 検証ミドルウェア
     - [ ] RBAC/スコープ定義（必要なら）
-- [ ] インフラ/IaC
-  - [ ] 基盤スタック
-    - [ ] Cognito, API Gateway(REST), Lambda, DynamoDB を IaC 化
-    - [ ] 環境別設定 (dev/prod) & CORS/ステージ
+- [ ] デプロイ/インフラ
+  - [ ] AWSコンソールで手動セットアップ
+    - [ ] Cognito User Pool + App Client + ドメイン
+    - [ ] API Gateway (REST) ステージ/CORS
+    - [ ] Lambda 関数デプロイ（zip/inline）
+    - [ ] DynamoDB テーブル作成（PK/SK/GSI/TTL）
   - [ ] CI/CD
     - [x] GitHub Actions (lint/format)
-    - [ ] デプロイワークフロー（手動トリガ or main push）
+    - [ ] （任意）手動デプロイ手順メモ / 将来 CI へ統合
 - [ ] テスト
   - [ ] 方針
     - [ ] カバレッジ目標策定
@@ -108,6 +110,6 @@
 
 - [x] Node.js LTS 22+ / npm (nvmrc=22)
 - [x] AWS CLI インストール & プロファイル確認（aws --version 2.31.8）
-- [ ] CDK / Terraform CLI インストール（未導入）
-- [ ] Docker インストール（LocalStack 等を使う場合）
+- [x] CDK / Terraform CLI（不使用と判断）
+- [x] Docker（不使用と判断）
 - [x] `.env.example` 作成 & `.env.local` 雛形配置
