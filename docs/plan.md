@@ -25,7 +25,7 @@
     - [x] ESLint + Prettier 設定（Vue/JS 用）
 - [ ] 要件・UX確定
   - [ ] スコープ整理
-    - [ ] MVP / 非MVP を切り分け
+    - [ ] MVP / 非MVP を docs/requirements/mvp.md で切り分け
     - [ ] 用語集とユーザーストーリーを docs/requirements で確定
   - [ ] UX成果物
     - [ ] 主要画面ラフ（docs/requirements/ux.md）
