@@ -1,9 +1,11 @@
 # 開発計画
 
 ## 目的
+
 - Memento 初期開発のWBSと進捗管理の基盤を示し、AGENTS.mdの運用ガイドに沿って作業を進める。
 
 ## WBS（チェックリスト・3層）
+
 - [ ] プロジェクト準備
   - [ ] リポジトリ/ブランチ運用
     - [x] GitHubリポジトリ作成（privateで開始、公開可否は後で判断）
@@ -104,10 +106,8 @@
   - [ ] 並行開発 → OpenAPI 契約先行 + モックAPI
 
 ## 環境準備チェックリスト
+
 - [ ] Node.js LTS 22+ / npm
 - [ ] AWS CLI + 認証プロファイル設定、CDK/Terraform CLI
 - [ ] Git フック実行権限、Docker（LocalStack 等を使う場合）
 - [ ] `.env.example` から `.env.local` を作成（Cognito, API, DynamoDB 設定）
-
-
-
