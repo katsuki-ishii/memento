@@ -107,6 +107,7 @@
 ## 環境準備チェックリスト
 
 - [x] Node.js LTS 22+ / npm (nvmrc=22)
-- [ ] AWS CLI + 認証プロファイル設定、CDK/Terraform CLI
-- [ ] Git フック実行権限、Docker（LocalStack 等を使う場合）
-- [ ] `.env.example` から `.env.local` を作成（Cognito, API, DynamoDB 設定）
+- [x] AWS CLI インストール & プロファイル確認（aws --version 2.31.8）
+- [ ] CDK / Terraform CLI インストール（未導入）
+- [ ] Docker インストール（LocalStack 等を使う場合）
+- [x] `.env.example` 作成 & `.env.local` 雛形配置
