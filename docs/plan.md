@@ -3,63 +3,111 @@
 ## 目的
 - Memento 初期開発のWBSと進捗管理の基盤を示し、AGENTS.mdの運用ガイドに沿って作業を進める。
 
-## WBS（チェックリスト）
+## WBS（チェックリスト・3層）
 - [ ] プロジェクト準備
-  - [ ] GitHubリポジトリ作成（privateで開始、公開可否は後で判断）
-  - [ ] `main`/`dev` ブランチ作成と保護設定（必須レビュー・CI必須）
-  - [ ] Git設定確認（user.name / user.email、改行LF固定）
-  - [ ] PowerShellのUTF-8実行確認（`chcp 65001` 相当、`[Console]::OutputEncoding` 設定）※AGENTS.md参照
-  - [ ] Node.js LTS (>=18) インストールし、`.nvmrc` or `.node-version` を配置
-  - [ ] パッケージマネージャ決定（npm/pnpm）と `package.json` 初期化
-  - [x] `.gitignore` 追加（node_modules, dist, .env.local など）
-  - [x] `.editorconfig` 追加（2スペース、UTF-8、LF）
-  - [ ] ESLint + Prettier 設定雛形追加（Vue/TS 用）
-  - [ ] commitlint + Conventional Commits ルール導入
-  - [ ] Husky 設定：`pre-commit` で lint/format、`commit-msg` で commitlint 実行
-  - [x] README 叩き台作成（概要・セットアップ手順・スクリプト一覧）
-  - [x] ライセンス選定・`LICENSE` 配置（未定なら TODO を明記）
-  - [ ] Issue/PR テンプレート用意（.github/ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE）
-  - [ ] エディタ/ターミナルでUTF-8保存と表示を確認（AGENTS.mdの推奨どおり `Set-Content -Encoding utf8` 等を使う）
+  - [ ] リポジトリ/ブランチ運用
+    - [x] GitHubリポジトリ作成（privateで開始、公開可否は後で判断）
+    - [x] Git設定確認（user.name / user.email、改行LF固定）
+    - [x] ブランチ保護ルール設定（main/dev で必須レビュー済み。ステータスチェックはCI導入後に追加）
+  - [ ] 基本ツール/設定
+    - [x] `.gitignore` / `.editorconfig` 設置
+    - [x] Node.js LTS (22) インストール & `.nvmrc` 設置確認
+    - [x] パッケージマネージャ決定（npm 採用）と `package.json` 初期化
+    - [ ] PowerShell UTF-8 実行確認（`[Console]::OutputEncoding` / `chcp 65001`）
+  - [ ] コラボ基盤
+    - [x] README 叩き台作成
+    - [x] LICENSE 設置（TODOで選定待ち）
+    - [x] Issue/PR テンプレート準備（.github/ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE）
+    - [x] commitlint + Conventional Commits 導入
+    - [x] Husky フック設定（`pre-commit` で lint/format、`commit-msg` で commitlint）
+    - [ ] ESLint + Prettier 設定（Vue/JS 用）
 - [ ] 要件・UX確定
-  - [ ] ユーザーストーリーと言葉の定義を明文化
-  - [ ] 画面ラフ・遷移図（認証・ライフグリッド・目標・イベント編集）作成
-  - [ ] MVP 範囲を決定し、後続機能と切り分け
+  - [ ] スコープ整理
+    - [ ] MVP / 非MVP を切り分け
+    - [ ] 用語集とユーザーストーリーを確定
+  - [ ] UX成果物
+    - [ ] 主要画面ラフ（認証/グリッド/目標/イベント）
+    - [ ] 画面遷移図・フロー
+    - [ ] 非機能要件ドラフト（性能・コスト・監視）
 - [ ] 設計
-  - [ ] OpenAPIでAPI契約を作成しレビュー
-  - [ ] DynamoDB テーブル設計（PK/SK、GSI、TTL）とアクセスパターン表を作成
-  - [ ] 認証/認可フロー（Cognito Auth Code + PKCE、トークン保持）を図解
-  - [ ] 非機能要件（性能・コスト・監視）を確定
+  - [ ] API/契約
+    - [ ] OpenAPIドラフト作成
+    - [ ] モックAPI/スキーマバリデーション方針決定
+  - [ ] データモデル
+    - [ ] DynamoDB 設計（PK/SK/GSI/TTL）
+    - [ ] アクセスパターン表レビュー
+  - [ ] 認証/認可
+    - [ ] Cognito Auth Code + PKCE フロー図
+    - [ ] トークン保持/更新ポリシー
 - [ ] 開発環境構築
-  - [ ] Vite + Vue3 + TypeScript プロジェクト生成、`npm install`
-  - [ ] Tailwind 設定、Vitest 導入、`.env.example` 用意
-  - [ ] Husky等で pre-commit に lint/format/test をフック
+  - [ ] フロント初期化
+    - [ ] Vite + Vue3 + JS プロジェクト生成
+    - [ ] Tailwind 設定
+    - [ ] Vitest 導入
+  - [ ] 設定/環境
+    - [ ] `.env.example` 作成
+    - [ ] lint/format スクリプト追加
+    - [ ] pre-commit で lint/format/test 実行
+  - [ ] ランタイム確認
+    - [ ] `npm run dev` 起動確認
+    - [ ] `npm run test` 簡易実行
 - [ ] フロントエンド実装 (MVP)
-  - [ ] レイアウト/テーマ、ルーターと保護ルート、状態管理(Pinia想定)
-  - [ ] 認証UI（サインアップ/ログイン/ログアウト）とトークンリフレッシュ
-  - [ ] ライフグリッド表示、目標設定フォーム、イベント CRUD UI、APIクライアント層
+  - [ ] 基盤
+    - [ ] レイアウト/テーマ
+    - [ ] ルーター & 保護ルート
+    - [ ] 状態管理 (Pinia)
+  - [ ] 認証
+    - [ ] サインアップ/ログイン/ログアウト UI
+    - [ ] トークンリフレッシュ/エラーハンドリング
+  - [ ] 機能UI
+    - [ ] ライフグリッド表示
+    - [ ] 目標設定フォーム
+    - [ ] イベント CRUD UI
+    - [ ] API クライアント層
 - [ ] バックエンド/API
-  - [ ] Lambda ハンドラ雛形、DTOバリデーション、共通ログ/エラーハンドリング
-  - [ ] イベント CRUD・目標 CRUD・ユーザー設定取得/更新を実装
-  - [ ] Cognito JWT 検証ミドルウェアと権限チェック
+  - [ ] 基盤
+    - [ ] Lambda 雛形/共通ロガー/エラー応答
+    - [ ] DTO バリデーション
+  - [ ] 機能API
+    - [ ] イベント CRUD 実装
+    - [ ] 目標 CRUD 実装
+    - [ ] ユーザー設定 取得/更新
+  - [ ] 認証/認可
+    - [ ] Cognito JWT 検証ミドルウェア
+    - [ ] RBAC/スコープ定義（必要なら）
 - [ ] インフラ/IaC
-  - [ ] CDK/Terraform で Cognito, API Gateway(REST), Lambda, DynamoDB を定義
-  - [ ] 環境別設定（dev/prod）と CORS/デプロイステージを整備
-  - [ ] CI/CD パイプライン雛形（lint/test/build/deploy）を GitHub Actions 等で用意
+  - [ ] 基盤スタック
+    - [ ] Cognito, API Gateway(REST), Lambda, DynamoDB を IaC 化
+    - [ ] 環境別設定 (dev/prod) & CORS/ステージ
+  - [ ] CI/CD
+    - [ ] GitHub Actions (lint/test/build)
+    - [ ] ブランチ保護の必須ステータスチェックにCI名を設定（ワークフロー作成後）
+    - [ ] デプロイワークフロー（手動トリガ or main push）
 - [ ] テスト
-  - [ ] 単体テスト（Vitest）カバレッジ目標設定とガイド作成
-  - [ ] API コントラクトテスト、ローカル統合（LocalStack or mock）方針を決定
-  - [ ] 簡易E2E計画（Playwright/Cypress）とスモーク項目を定義
+  - [ ] 方針
+    - [ ] カバレッジ目標策定
+    - [ ] テスト命名/配置ルール記載
+  - [ ] 実装
+    - [ ] 単体テスト充実
+    - [ ] API 契約テスト (mock/LocalStack)
+    - [ ] E2E スモーク (Playwright/Cypress) 計画/一部実装
 - [ ] 運用・リリース
-  - [ ] 監視/アラート（CloudWatch Logs/Alarms）、エラートラッキング方針を決定
-  - [ ] バックアップ/リカバリ手順（DynamoDB PITR）を整理
-  - [ ] リリース手順とロールバック手順を記述
+  - [ ] 監視/運用
+    - [ ] CloudWatch ログ/アラーム設計
+    - [ ] エラートラッキング設定
+  - [ ] 信頼性
+    - [ ] DynamoDB PITR/バックアップ手順
+    - [ ] ロールバック手順
 - [ ] リスクと対応
   - [ ] 認証フロー複雑化 → 初期は Email/Password + PKCE に限定
-  - [ ] DynamoDB 設計ミス → アクセスパターン表をレビュー
-  - [ ] フロント/バック並行開発 → OpenAPI 契約先行とモックAPI準備
+  - [ ] DynamoDB 設計ミス → アクセスパターンレビュー
+  - [ ] 並行開発 → OpenAPI 契約先行 + モックAPI
 
 ## 環境準備チェックリスト
-- [ ] Node.js LTS 18+ / npm または pnpm
+- [ ] Node.js LTS 22+ / npm
 - [ ] AWS CLI + 認証プロファイル設定、CDK/Terraform CLI
 - [ ] Git フック実行権限、Docker（LocalStack 等を使う場合）
 - [ ] `.env.example` から `.env.local` を作成（Cognito, API, DynamoDB 設定）
+
+
+

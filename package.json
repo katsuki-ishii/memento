@@ -1,0 +1,36 @@
+{
+  "name": "memento",
+  "version": "1.0.0",
+  "description": "ライフカレンダー（81年×52週）で人生の進捗を見える化し、目標設定とイベント記録を行うアプリ。Cognito 認証、API Gateway + Lambda、DynamoDB を組み合わせた構成を想定。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install",
+    "lint": "eslint . --no-warn-ignored",
+    "format": "prettier -w .",
+    "format:check": "prettier -c ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/katsuki-ishii/memento.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/katsuki-ishii/memento/issues"
+  },
+  "homepage": "https://github.com/katsuki-ishii/memento#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "prettier": "^3.6.2"
+  }
+}
