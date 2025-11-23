@@ -15,7 +15,7 @@
     - [x] `.gitignore` / `.editorconfig` 設置
     - [x] Node.js LTS (22) インストール & `.nvmrc` 設置確認
     - [x] パッケージマネージャ決定（npm 採用）と `package.json` 初期化
-    - [ ] PowerShell UTF-8 実行確認（`[Console]::OutputEncoding` / `chcp 65001`）
+    - [x] PowerShell UTF-8 実行確認（`[Console]::OutputEncoding` / `chcp 65001`）
   - [ ] コラボ基盤
     - [x] README 叩き台作成
     - [x] LICENSE 設置（TODOで選定待ち）
@@ -82,8 +82,8 @@
     - [ ] Cognito, API Gateway(REST), Lambda, DynamoDB を IaC 化
     - [ ] 環境別設定 (dev/prod) & CORS/ステージ
   - [ ] CI/CD
-    - [ ] GitHub Actions (lint/test/build)
-    - [ ] ブランチ保護の必須ステータスチェックにCI名を設定（ワークフロー作成後）
+    - [x] GitHub Actions (lint/format)
+    - [ ] ブランチ保護の必須ステータスチェックにCI名を設定（Web設定で手動）
     - [ ] デプロイワークフロー（手動トリガ or main push）
 - [ ] テスト
   - [ ] 方針
