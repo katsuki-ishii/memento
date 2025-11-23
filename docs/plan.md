@@ -18,11 +18,11 @@
     - [x] PowerShell UTF-8 実行確認（`[Console]::OutputEncoding` / `chcp 65001`）
   - [ ] コラボ基盤
     - [x] README 叩き台作成
-    - [x] LICENSE 設置（TODOで選定待ち）
+    - [x] LICENSE 設置（MIT）
     - [x] Issue/PR テンプレート準備（.github/ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE）
     - [x] commitlint + Conventional Commits 導入
     - [x] Husky フック設定（`pre-commit` で lint/format、`commit-msg` で commitlint）
-    - [ ] ESLint + Prettier 設定（Vue/JS 用）
+    - [x] ESLint + Prettier 設定（Vue/JS 用）
 - [ ] 要件・UX確定
   - [ ] スコープ整理
     - [ ] MVP / 非MVP を切り分け
