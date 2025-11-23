@@ -83,7 +83,6 @@
     - [ ] 環境別設定 (dev/prod) & CORS/ステージ
   - [ ] CI/CD
     - [x] GitHub Actions (lint/format)
-    - [ ] ブランチ保護の必須ステータスチェックにCI名を設定（Web設定で手動）
     - [ ] デプロイワークフロー（手動トリガ or main push）
 - [ ] テスト
   - [ ] 方針
@@ -107,7 +106,7 @@
 
 ## 環境準備チェックリスト
 
-- [ ] Node.js LTS 22+ / npm
+- [x] Node.js LTS 22+ / npm (nvmrc=22)
 - [ ] AWS CLI + 認証プロファイル設定、CDK/Terraform CLI
 - [ ] Git フック実行権限、Docker（LocalStack 等を使う場合）
 - [ ] `.env.example` から `.env.local` を作成（Cognito, API, DynamoDB 設定）

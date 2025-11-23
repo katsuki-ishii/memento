@@ -15,3 +15,7 @@
 - `api/`: Lambda ハンドラと共通ライブラリ
 - `infra/`: CDK/Terraform で Cognito, API Gateway, Lambda, DynamoDB
 - `docs/`: 要件・計画・ADR
+
+## ライセンス
+
+- MIT (see LICENSE)
