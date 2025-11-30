@@ -59,8 +59,8 @@
       - [ ] Tailwind テーマトークン定義と `data-theme` 切替（body反映）
       - [ ] トースト/ローディングのグローバルコンポーネントをプレースホルダで配置（UIストア連携前提）
     - [ ] ルーター & 保護ルート（認証・初期設定ガード実装）
-      - [ ] `meta.requiresAuth/requiresSetup` を使った beforeEach ガード実装
-      - [ ] ガード中のローディング表示と `/error` フォールバック
+      - [x] `meta.requiresAuth/requiresSetup` を使った beforeEach ガード実装
+      - [x] ガード中のローディング表示と `/error` フォールバック
     - [ ] 状態管理 (Pinia) ストア雛形作成
       - [ ] `auth` / `profile` / `grid` / `ui` ストアの state・actions の枠と sessionStorage 永続化ラッパ
       - [ ] 各ストアの Vitest スケルトン

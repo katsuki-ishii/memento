@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from './routes';
+import { useUiStore } from '../stores/ui';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -36,6 +37,9 @@ const getAuthSession = () => {
 };
 
 router.beforeEach((to, from, next) => {
+  const ui = useUiStore();
+  ui.startRouting();
+
   const { isAuthenticated, isSetupComplete } = getAuthSession();
 
   try {
@@ -72,6 +76,16 @@ router.beforeEach((to, from, next) => {
     }
     return next({ name: 'error' });
   }
+});
+
+router.afterEach(() => {
+  const ui = useUiStore();
+  ui.stopRouting();
+});
+
+router.onError(() => {
+  const ui = useUiStore();
+  ui.stopRouting();
 });
 
 export default router;
