@@ -8,6 +8,7 @@
       </header>
       <button
         class="rounded-md bg-gray-900 px-4 py-2 text-white shadow-sm transition hover:bg-gray-800"
+        @click="start"
       >
         Hosted UI へ進む
       </button>
@@ -17,3 +18,29 @@
     </div>
   </main>
 </template>
+
+<script setup>
+import { useRouter } from 'vue-router';
+import { useUiStore } from '../../stores/ui';
+import { startHostedLogin } from '../../services/authService';
+
+const router = useRouter();
+const ui = useUiStore();
+
+const start = async () => {
+  try {
+    ui.startBusy();
+    const result = await startHostedLogin({ redirectUrl: '/auth/callback' });
+    // デモでは Hosted UI の代わりにルーターで callback を再現
+    router.push(result.simulatedRedirect);
+  } catch (error) {
+    ui.pushToast({
+      title: '認証を開始できませんでした',
+      message: error?.message,
+      variant: 'error',
+    });
+  } finally {
+    ui.stopBusy();
+  }
+};
+</script>

@@ -8,3 +8,33 @@
     </div>
   </main>
 </template>
+
+<script setup>
+import { onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { handleCallback } from '../../services/authService';
+import { useUiStore } from '../../stores/ui';
+
+const route = useRoute();
+const router = useRouter();
+const ui = useUiStore();
+
+onMounted(async () => {
+  try {
+    ui.startBusy();
+    const { code, error } = route.query;
+    const result = await handleCallback({ code, error });
+    router.replace(result?.isSetupComplete ? { name: 'dashboard' } : { name: 'setup' });
+    ui.pushToast({ title: 'ログインしました', variant: 'success' });
+  } catch (err) {
+    ui.pushToast({
+      title: '認証に失敗しました',
+      message: err?.reason || err?.message,
+      variant: 'error',
+    });
+    router.replace({ name: 'auth-start' });
+  } finally {
+    ui.stopBusy();
+  }
+});
+</script>
