@@ -62,8 +62,8 @@
       - [x] `meta.requiresAuth/requiresSetup` を使った beforeEach ガード実装
       - [x] ガード中のローディング表示と `/error` フォールバック
     - [ ] 状態管理 (Pinia) ストア雛形作成
-      - [ ] `auth` / `profile` / `grid` / `ui` ストアの state・actions の枠と sessionStorage 永続化ラッパ
-      - [ ] 各ストアの Vitest スケルトン
+      - [x] `auth` / `profile` / `grid` / `ui` ストアの state・actions の枠と sessionStorage 永続化ラッパ
+      - [x] 各ストアの Vitest スケルトン
   - [ ] 認証
     - [ ] サインアップ/ログイン/ログアウト UI
     - [ ] Hosted UI 起動/コールバック stub（`startHostedLogin` / `handleCallback`）とルータ遷移分岐
