@@ -1,46 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { routes } from './routes';
 import { useUiStore } from '../stores/ui';
+import { useAuthStore } from '../stores/auth';
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
 
-/**
- * 仮のセッション取得:
- * 今後 useAuthStore へ置き換える前提で sessionStorage を参照。
- * 保存フォーマットの暫定キー: "memento_auth" = { accessToken, isSetupComplete }
- */
-const getAuthSession = () => {
-  const storage =
-    typeof globalThis !== 'undefined' && globalThis.sessionStorage
-      ? globalThis.sessionStorage
-      : null;
-
-  try {
-    if (!storage) return { isAuthenticated: false, isSetupComplete: false };
-
-    const raw = storage.getItem('memento_auth');
-    if (!raw) return { isAuthenticated: false, isSetupComplete: false };
-    const parsed = JSON.parse(raw);
-    return {
-      isAuthenticated: Boolean(parsed?.accessToken),
-      isSetupComplete: Boolean(parsed?.isSetupComplete),
-    };
-  } catch (error) {
-    if (globalThis?.console) {
-      globalThis.console.warn('Failed to parse auth session', error);
-    }
-    return { isAuthenticated: false, isSetupComplete: false };
-  }
-};
-
 router.beforeEach((to, from, next) => {
   const ui = useUiStore();
+  const auth = useAuthStore();
+
+  auth.hydrateFromStorage();
   ui.startRouting();
 
-  const { isAuthenticated, isSetupComplete } = getAuthSession();
+  const isAuthenticated = auth.isAuthenticated;
+  const isSetupComplete = auth.isSetupComplete;
 
   try {
     // 公開ルート: 認証済みユーザーはホーム/認証系からダッシュボードまたは初期設定へ誘導
