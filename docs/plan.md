@@ -66,7 +66,7 @@
       - [x] 各ストアの Vitest スケルトン
   - [ ] 認証
     - [ ] サインアップ/ログイン/ログアウト UI
-    - [ ] Hosted UI 起動/コールバック stub（`startHostedLogin` / `handleCallback`）とルータ遷移分岐
+    - [x] Hosted UI 起動/コールバック stub（`startHostedLogin` / `handleCallback`）とルータ遷移分岐
     - [ ] トークンリフレッシュ/エラーハンドリング
   - [ ] 機能UI
     - [ ] ライフグリッド表示
