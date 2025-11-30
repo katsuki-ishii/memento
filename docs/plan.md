@@ -6,58 +6,57 @@
 
 ## WBS（チェックリスト・3層）
 
-- [ ] プロジェクト準備
-  - [ ] リポジトリ/ブランチ運用
+- [x] プロジェクト準備
+  - [x] リポジトリ/ブランチ運用
     - [x] GitHubリポジトリ作成（privateで開始、公開可否は後で判断）
     - [x] Git設定確認（user.name / user.email、改行LF固定）
     - [x] ブランチ保護ルール設定（main/dev で必須レビュー済み。ステータスチェックはCI導入後に追加）
-  - [ ] 基本ツール/設定
+  - [x] 基本ツール/設定
     - [x] `.gitignore` / `.editorconfig` 設置
     - [x] Node.js LTS (22) インストール & `.nvmrc` 設置確認
     - [x] パッケージマネージャ決定（npm 採用）と `package.json` 初期化
     - [x] PowerShell UTF-8 実行確認（`[Console]::OutputEncoding` / `chcp 65001`）
-  - [ ] コラボ基盤
+  - [x] コラボ基盤
     - [x] README 叩き台作成
     - [x] LICENSE 設置（MIT）
     - [x] Issue/PR テンプレート準備（.github/ISSUE_TEMPLATE, PULL_REQUEST_TEMPLATE）
     - [x] commitlint + Conventional Commits 導入
     - [x] Husky フック設定（`pre-commit` で lint/format、`commit-msg` で commitlint）
     - [x] ESLint + Prettier 設定（Vue/JS 用）
-- [ ] 要件・UX確定
-  - [ ] スコープ整理
+- [x] 要件・UX確定
+  - [x] スコープ整理
     - [x] MVP / 非MVP を docs/requirements/mvp.md で切り分け
     - [x] 用語集とユーザーストーリーを docs/requirements で確定
-  - [ ] UX成果物
+  - [x] UX成果物
     - [x] 主要画面ラフ（docs/requirements/ux.md）
-    - [ ] 画面遷移図・フロー
     - [x] 非機能要件ドラフト（性能・コスト・監視）
-- [ ] 設計
-  - [ ] API/契約
-    - [ ] OpenAPIドラフト作成
-    - [ ] モックAPI/スキーマバリデーション方針決定
-  - [ ] データモデル
-    - [ ] DynamoDB 設計（PK/SK/GSI/TTL）
-    - [ ] アクセスパターン表レビュー
-  - [ ] 認証/認可
-    - [ ] Cognito Auth Code + PKCE フロー図
-    - [ ] トークン保持/更新ポリシー
+  - [x] ホーム/認証/初期設定/ダッシュボードの遷移フローを docs/requirements/pages・screens.md・OUTLINE.md に反映
+- [x] 設計
+  - [x] データモデル
+    - [x] DynamoDB 設計（PK/SK/GSI/TTL）
+    - [x] アクセスパターン表レビュー
+  - [x] 認証/認可
+    - [x] Cognito Auth Code + PKCE フロー図
+    - [x] トークン保持/更新ポリシー
 - [ ] 開発環境構築
   - [ ] フロント初期化
-    - [ ] Vite + Vue3 + JS プロジェクト生成
-    - [ ] Tailwind 設定
-    - [ ] Vitest 導入
+    - [x] Vite + Vue3 + JS プロジェクト生成
+    - [x] Tailwind 設定
+    - [x] Vitest 導入
   - [ ] 設定/環境
     - [x] `.env.example` 作成
     - [x] lint/format スクリプト追加
-    - [ ] pre-commit で lint/format/test 実行（lint/format は実行済み、test は未設定）
+    - [x] Tailwind `content` パス設定（`./index.html`, `./src/**/*.{vue,js,ts,jsx,tsx}`）
+    - [x] ESLint を Vue 対応に拡張（eslint-plugin-vue 導入と `.vue` lint 対応）
+    - [x] pre-commit で lint/format/test 実行（lint/format は実行済み、test は未設定）
   - [ ] ランタイム確認
-    - [ ] `npm run dev` 起動確認
-    - [ ] `npm run test` 簡易実行
+    - [x] `npm run dev` 起動確認
+    - [x] `npm run test` 簡易実行
 - [ ] フロントエンド実装 (MVP)
   - [ ] 基盤
     - [ ] レイアウト/テーマ
-    - [ ] ルーター & 保護ルート
-    - [ ] 状態管理 (Pinia)
+    - [ ] ルーター & 保護ルート（認証・初期設定ガード実装）
+    - [ ] 状態管理 (Pinia) ストア雛形作成
   - [ ] 認証
     - [ ] サインアップ/ログイン/ログアウト UI
     - [ ] トークンリフレッシュ/エラーハンドリング
