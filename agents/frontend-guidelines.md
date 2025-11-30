@@ -1,23 +1,318 @@
 # frontend-guidelines.md
 
-## 構成
+## 1. 基本原則
 
-- `frontend/` を想定: `src/views`, `src/components`, `src/router`, `src/composables`, `src/lib`, `src/assets`。
-- ルーター: 認証必須ルートはガードで保護。未ログインはログイン画面へリダイレクト。
+- ロジックはすべて composables に集約する。
+- コンポーネントは UI とイベント配線に特化させる。
+- setup は長くなりすぎないようにし、肥大化した部分は composables へ移動する。
+- Options API の構造（data、methods など）は残さない。
+- 関数・変数は用途が一読で分かる命名にする。
 
-## 状態管理
+## 2. ディレクトリ構造の原則
 
-- Pinia を想定。認証情報・ユーザー設定・イベント/目標はストア分割。永続化は localStorage しすぎない（トークンは Cognito PKCE を基本に）。
+Memento の画面フロー（ホーム→認証→初期設定→ダッシュボード）とライフグリッド/イベント機能に合わせて、ページ単位で UI を閉じつつ、ロジック・API・状態を機能別にそろえる。
 
-## UI/UX
+### 推奨構造
 
-- ライフグリッドは週単位のセルを色分け。キーボード操作とコントラスト確保。
-- フォーム: バリデーションとエラーメッセージを即時表示。
+```jsx
+src /
+  assets /
+  components /
+  common / // 再利用 UI（ボタン、フォーム部品、モーダル等）
+  layout / // ヘッダー、サイドバー、シェル
+  composables / // ロジック（状態・副作用・計算）
+  auth /
+  settings /
+  events /
+  grid /
+  shared /
+  services / // API 呼び出し専用レイヤー（fetch/Axiosラッパ）
+  http /
+  authService.js;
+settingsService.js;
+eventsService.js;
 
-## API 連携
+stores / // 画面横断で共有する state（Pinia）
+  authStore.js;
+userStore.js;
+eventStore.js;
+uiStore.js; // トースト/ダイアログ等のUI状態
 
-- API クライアントは `src/lib/api` にまとめ、JSDoc でリクエスト/レスポンスを注釈。失敗時はユーザーにわかるメッセージ + ログ。
+router / index.js; // ルーター初期化・ガード
+routes.js; // ルート定義（/ /auth /auth/callback /setup /dashboard /error）
 
-## スタイル
+views / // 画面単位のコンテナ
+  home /
+  Home.vue;
+components / auth / AuthStart.vue;
+AuthCallback.vue;
+setup / Setup.vue;
+dashboard / Dashboard.vue;
+components / GridCanvas.vue;
+SummaryPanel.vue;
+EventDrawer.vue;
+error / NotFound.vue;
+Unauthorized.vue;
 
-- Tailwind ユーティリティ。共通トークンは `:root` カスタムプロパティか Tailwind テーマ拡張で定義。
+styles / tailwind.css;
+
+App.vue;
+main.js;
+```
+
+### この構造を推奨する理由
+
+- 認証→初期設定→ダッシュボードのガード実装を `router/` に閉じ込め、ビューと分離できる。
+- ライフグリッド/イベントなど機能別に composables・services・stores を並べ、責務を追いやすい。
+- ページ固有 UI は views 配下に閉じ、再利用部品は components/common へ昇格させる流れが明確。
+- services と stores の階層を合わせることで API と状態の対応を把握しやすい。
+- styles を分離して Tailwind 設定の配置を固定できる。
+
+### reactive を使うケース
+
+- フォーム入力のように複数の値がセットで扱われる場合
+- “オブジェクトとしてのまとまり”が強い状態
+
+```jsx
+const form = reactive({
+  name: '',
+  age: null,
+  email: '',
+});
+```
+
+### チーム向け追加ガイドライン
+
+- 深いネストが必要な場合は reactive を避ける（追跡が難しくなるため）。
+- reactive を返す場合は構造が固定されていることが前提となる。
+- composables の返り値は ref を基本とし、必要最小限だけ reactive を返す。
+- API の生データは ref に入れて、加工は computed で行う。
+
+---
+
+## 3. composables の設計方針
+
+- composables は必ず関数として定義し、必要な値・関数のみ返す。
+- UI や DOM に依存するコードは含めない。
+- サービス（API 呼び出し）を内部で使用してもよいが、state 管理は composable 側で行う。
+- 必要であれば機能別フォルダで整理する。
+
+### composable の例
+
+```jsx
+// src/composables/user/useUser.js
+import { ref, computed } from 'vue';
+import { getUser, updateUser as updateUserApi } from '@/services/userService';
+
+export function useUser() {
+  const user = ref(null);
+  const isLoading = ref(false);
+
+  async function loadUser() {
+    isLoading.value = true;
+    try {
+      user.value = await getUser();
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function updateUser(payload) {
+    await updateUserApi(payload);
+    user.value = payload;
+  }
+
+  const fullName = computed(() => {
+    if (!user.value) return '';
+    return `${user.value.first} ${user.value.last}`;
+  });
+
+  return {
+    user,
+    isLoading,
+    fullName,
+    loadUser,
+    updateUser,
+  };
+}
+```
+
+## 4. services の設計方針
+
+- services は API 呼び出し専用にする。
+- axios などの HTTP クライアント設定は src/services/http/ に集約する。
+- 返り値の整形以上のロジックは composables へ寄せる。
+
+### service の例
+
+```jsx
+// src/services/userService.js
+import http from './http/axios';
+
+export function getUser() {
+  return http.get('/user');
+}
+
+export function updateUser(payload) {
+  return http.post('/user/update', payload);
+}
+```
+
+## 5. Pinia ストアの方針
+
+- 画面を跨いで必要な state を保持することを基本とする。
+- ただし **同一画面内の複数コンポーネント間で状態共有が必要で、props 受け渡しが複雑になる場合は Pinia を使用してよい**。
+- composables はローカルな機能単位の状態保持に使う。
+- store へ入れる state は「共有したい理由」が明確であることを条件とする。
+
+### Pinia を使うべきケース
+
+- 画面を跨いで使うユーザー情報や設定値。
+- 同一画面内で複数コンポーネント間にまたがる状態を共有する必要があり、props バケツリレーが煩雑になる場合。
+- 複雑な UI 状態（タブ、フィルター、選択状態など）を複数コンポーネントで扱う場合。
+
+### Pinia を使わない方がよいケース
+
+- 単一コンポーネント内で完結する状態。
+- 一時的な UI 状態（モーダル開閉、ローカルな検索キーワードなど）。
+- composables で簡単に共有できる程度の軽い状態。
+
+### ストアの例
+
+```jsx
+// src/stores/userStore.js
+import { defineStore } from 'pinia';
+
+export const useUserStore = defineStore('user', {
+  state: () => ({
+    user: null,
+    isFetching: false,
+  }),
+  actions: {
+    setUser(payload) {
+      this.user = payload;
+    },
+    setFetching(flag) {
+      this.isFetching = flag;
+    },
+  },
+});
+```
+
+## 6. コンポーネントの設計
+
+- 再利用可能な UI 部品は components/common に配置する。
+- layout 系（ヘッダー、サイドバー）は components/layout に分離する。
+- 特定ページに属する UI 部品は components/feature 下に置く。
+- コンポーネントにはビジネスロジックを入れず composables から取得する。
+
+### コンポーネント例
+
+```jsx
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useUser } from '@/composables/user/useUser'
+
+const { user, loadUser, updateUser } = useUser()
+const isModalOpen = ref(false)
+
+function openModal() {
+  isModalOpen.value = true
+}
+
+function save() {
+  updateUser(user.value)
+  isModalOpen.value = false
+}
+
+onMounted(loadUser)
+</script>
+
+<template>
+  <div>
+    <p>{{ user?.name }}</p>
+    <button @click="openModal">編集</button>
+    <EditModal v-if="isModalOpen" @save="save" @close="isModalOpen = false" />
+  </div>
+</template>
+
+```
+
+## 7. setup の構造
+
+以下の順番を統一的に採用する。
+
+1. import
+2. state（ref, reactive）
+3. computed
+4. methods（関数）
+5. watch
+6. lifecycle hooks
+7. return
+
+## 8. watch と computed の方針
+
+- computed は値の導出専用とし、副作用を入れない。
+- watch は副作用が必要な場合にのみ使う。
+- 可能であればイベント伝播や明示的な関数呼び出しで代替する。
+
+## 9. props / emits
+
+- defineProps / defineEmits を用いる。
+- props のデフォルト値は必要に応じて親で明示する。
+- emits は UI の動作を表す名前にする（save, close など）。
+
+## 10. views の方針
+
+- ページの読み込みや画面遷移に関する最小限の処理だけを書く。
+- ロジックは composables へ逃がす。
+- 不要な再レンダリングを避けるため state をストアに過剰に置かない。
+
+## 11. ref と reactive の使い分け指針
+
+Vue の思想である「明確で予測可能なリアクティビティ」を保つため、ref と reactive の使い分けはチームで統一する。
+
+基本原則
+
+- 単一値（文字列、数値、真偽値など）は ref を使う。
+- 複数プロパティで1つの意味を成す“まとまり”は reactive を使う。
+- 返り値として UI から利用されることを考えると ref の方が扱いやすい。
+- reactive は便利だが、状態追跡が複雑になるため必要なときだけ使う。
+
+ref を使うケース
+
+- フラグ（モーダル開閉など）
+- 数値・文字列など単純な状態
+- API レスポンスの保持（構造が安定しない場合）
+
+## 12. レビュー観点
+
+- setup の構成順序は守られているか。
+- ロジックが composables へ適切に分離されているか。
+- 命名が用途を的確に表しているか。
+- services が API 呼び出し専用として保たれているか。
+- views や components が肥大化していないか。
+- stores に余計なロジックが入っていないか。
+
+## 13. 肥大化判断基準（コンポーネント・composables・stores）
+
+### コンポーネント（views / components）
+
+- setup が 150 行を超えた場合は分割を検討する。
+- 関数が 10 個を超える場合は責務過多と判断する。
+- template が 200 行を超える場合は部分コンポーネント化を検討する。
+- props が 8 個以上の場合はコンポーネント分割を検討する。
+
+### composables
+
+- ファイルが 200 行を超える場合はロジック分割を検討する。
+- return する変数や関数が 11 個以上になった場合は責務を分割する。
+- watch が 3 つ以上ある場合はロジックが集中しすぎている可能性がある。
+
+### stores（Pinia）
+
+- state が 10 項目以上ある場合は store の責務過多と判断する。
+- actions が 10 個以上ある場合はロジックを composables に移すことを検討する。
+- 単一画面でしか使わない state は composables または component 側に移動する。
+
+これらの基準をもとに、コンポーネントや composables、store の責務が適切に分担されているかを確認することを推奨する。
