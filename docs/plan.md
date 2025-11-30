@@ -55,8 +55,8 @@
 - [ ] フロントエンド実装 (MVP)
   - [ ] 基盤
     - [ ] レイアウト/テーマ
-      - [ ] Appシェル（header/main/footer）とダッシュボード専用サイドナビ/ハンバーガーを組み込み
-      - [ ] Tailwind テーマトークン定義と `data-theme` 切替（body反映）
+      - [x] Appシェル（header/main/footer）とダッシュボード専用サイドナビ/ハンバーガーを組み込み
+      - [x] Tailwind テーマトークン定義と `data-theme` 切替（body反映）
       - [ ] トースト/ローディングのグローバルコンポーネントをプレースホルダで配置（UIストア連携前提）
     - [ ] ルーター & 保護ルート（認証・初期設定ガード実装）
       - [x] `meta.requiresAuth/requiresSetup` を使った beforeEach ガード実装
