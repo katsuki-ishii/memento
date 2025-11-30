@@ -66,14 +66,24 @@
       - [x] 各ストアの Vitest スケルトン
   - [ ] 認証
     - [ ] サインアップ/ログイン/ログアウト UI
+      - [ ] エラー表示/バリデーションの明示とトースト連携
+      - [ ] ヘッダー/サイドナビからのログアウト導線
     - [x] Hosted UI 起動/コールバック stub（`startHostedLogin` / `handleCallback`）とルータ遷移分岐
     - [ ] トークンリフレッシュ/エラーハンドリング
+      - [ ] refresh_token を使った更新処理の枠を authService に追加
+      - [ ] 失効時の再ログイン誘導とトースト表示
   - [ ] 機能UI
     - [ ] ライフグリッド表示
       - [x] ダミー週データを Pinia から供給し、現在週ハイライト/イベント色分けの骨組みを実装
+      - [ ] サマリー（記録週数・残り週数）のダミー計算と表示
+      - [ ] `select-week` で選択週をストアに反映する
     - [ ] 目標設定フォーム
     - [ ] イベント CRUD UI
     - [ ] API クライアント層
+      - [ ] http ラッパに Auth ヘッダー注入/エラー整形を実装
+      - [ ] settingsService / eventsService の関数枠と JSDoc を用意
+    - [ ] 設定フォーム骨組み（Setup）
+      - [ ] username/birthYear/lifespan/weekStart/theme を profile ストアと双方向に接続（まだ API なし）
 - [ ] バックエンド/API
   - [ ] 基盤
     - [ ] Lambda 雛形/共通ロガー/エラー応答
