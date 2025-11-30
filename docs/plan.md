@@ -38,30 +38,39 @@
   - [x] 認証/認可
     - [x] Cognito Auth Code + PKCE フロー図
     - [x] トークン保持/更新ポリシー
-- [ ] 開発環境構築
-  - [ ] フロント初期化
+- [x] 開発環境構築
+  - [x] フロント初期化
     - [x] Vite + Vue3 + JS プロジェクト生成
     - [x] Tailwind 設定
     - [x] Vitest 導入
-  - [ ] 設定/環境
+  - [x] 設定/環境
     - [x] `.env.example` 作成
     - [x] lint/format スクリプト追加
     - [x] Tailwind `content` パス設定（`./index.html`, `./src/**/*.{vue,js,ts,jsx,tsx}`）
     - [x] ESLint を Vue 対応に拡張（eslint-plugin-vue 導入と `.vue` lint 対応）
     - [x] pre-commit で lint/format/test 実行（lint/format は実行済み、test は未設定）
-  - [ ] ランタイム確認
+  - [x] ランタイム確認
     - [x] `npm run dev` 起動確認
     - [x] `npm run test` 簡易実行
 - [ ] フロントエンド実装 (MVP)
   - [ ] 基盤
     - [ ] レイアウト/テーマ
+      - [ ] Appシェル（header/main/footer）とダッシュボード専用サイドナビ/ハンバーガーを組み込み
+      - [ ] Tailwind テーマトークン定義と `data-theme` 切替（body反映）
+      - [ ] トースト/ローディングのグローバルコンポーネントをプレースホルダで配置（UIストア連携前提）
     - [ ] ルーター & 保護ルート（認証・初期設定ガード実装）
+      - [ ] `meta.requiresAuth/requiresSetup` を使った beforeEach ガード実装
+      - [ ] ガード中のローディング表示と `/error` フォールバック
     - [ ] 状態管理 (Pinia) ストア雛形作成
+      - [ ] `auth` / `profile` / `grid` / `ui` ストアの state・actions の枠と sessionStorage 永続化ラッパ
+      - [ ] 各ストアの Vitest スケルトン
   - [ ] 認証
     - [ ] サインアップ/ログイン/ログアウト UI
+    - [ ] Hosted UI 起動/コールバック stub（`startHostedLogin` / `handleCallback`）とルータ遷移分岐
     - [ ] トークンリフレッシュ/エラーハンドリング
   - [ ] 機能UI
     - [ ] ライフグリッド表示
+      - [ ] ダミー週データを Pinia から供給し、現在週ハイライト/イベント色分けの骨組みを実装
     - [ ] 目標設定フォーム
     - [ ] イベント CRUD UI
     - [ ] API クライアント層
