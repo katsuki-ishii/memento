@@ -34,11 +34,10 @@ import { computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import HeaderBar from './HeaderBar.vue';
 import SideNav from './SideNav.vue';
-import { useAuthStore } from '../../stores/auth';
+import { startLogout } from '../../services/authService';
 
 const route = useRoute();
 const router = useRouter();
-const auth = useAuthStore();
 
 const navOpen = ref(false);
 
@@ -60,8 +59,10 @@ const closeNav = () => {
 };
 
 const handleLogout = () => {
-  auth.clearSession();
-  router.push({ name: 'auth-start' });
+  const result = startLogout();
+  if (!result?.performedRedirect) {
+    router.push({ name: 'auth-start' });
+  }
 };
 </script>
 

@@ -31,8 +31,17 @@ const start = async () => {
   try {
     ui.startBusy();
     const result = await startHostedLogin({ redirectUrl: '/auth/callback' });
-    // デモでは Hosted UI の代わりにルーターで callback を再現
-    router.push(result.simulatedRedirect);
+
+    if (result?.performedRedirect) {
+      return;
+    }
+
+    // Hosted UI 未設定の場合はローカルルーターで擬似遷移
+    if (result?.simulatedRedirect) {
+      router.push(result.simulatedRedirect);
+    } else {
+      throw new Error('Hosted UI is not configured (VITE_COGNITO_* envs missing)');
+    }
   } catch (error) {
     ui.pushToast({
       title: '認証を開始できませんでした',

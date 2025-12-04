@@ -22,8 +22,11 @@ const ui = useUiStore();
 onMounted(async () => {
   try {
     ui.startBusy();
-    const { code, error } = route.query;
-    const result = await handleCallback({ code, error });
+    const code = Array.isArray(route.query.code) ? route.query.code[0] : route.query.code;
+    const state = Array.isArray(route.query.state) ? route.query.state[0] : route.query.state;
+    const error = Array.isArray(route.query.error) ? route.query.error[0] : route.query.error;
+
+    const result = await handleCallback({ code, state, error });
     router.replace(result?.isSetupComplete ? { name: 'dashboard' } : { name: 'setup' });
     ui.pushToast({ title: 'ログインしました', variant: 'success' });
   } catch (err) {
