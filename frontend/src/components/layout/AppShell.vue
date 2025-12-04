@@ -2,24 +2,30 @@
   <div class="flex min-h-screen flex-col bg-surface text-primary">
     <HeaderBar :show-nav="showNavButton" @toggle-nav="toggleNav" />
 
-    <div class="relative flex flex-1">
-      <transition name="slide">
-        <SideNav
+    <div class="pointer-events-none fixed inset-0 z-40">
+      <transition name="fade">
+        <div
           v-if="showNavButton && navOpen"
-          class="fixed inset-y-0 left-0 z-40 w-64 bg-card md:relative md:translate-x-0"
-          @logout="handleLogout"
+          class="pointer-events-auto absolute inset-0 bg-black/50"
+          aria-hidden="true"
+          @click="closeNav"
         />
       </transition>
 
-      <main
-        class="flex-1"
-        :class="{
-          'pl-64 hidden md:block': showNavButton,
-        }"
-      >
-        <slot />
-      </main>
+      <transition name="slide">
+        <SideNav
+          v-if="showNavButton && navOpen"
+          class="pointer-events-auto absolute top-0 left-0 h-screen w-64 bg-card shadow-lg"
+          :show-close="true"
+          @logout="handleLogout"
+          @close="closeNav"
+        />
+      </transition>
     </div>
+
+    <main class="flex-1 min-w-0">
+      <slot />
+    </main>
   </div>
 </template>
 
@@ -35,6 +41,7 @@ const router = useRouter();
 const auth = useAuthStore();
 
 const navOpen = ref(false);
+
 const showNavButton = computed(() => route.name === 'dashboard');
 
 watch(
@@ -48,6 +55,10 @@ const toggleNav = () => {
   navOpen.value = !navOpen.value;
 };
 
+const closeNav = () => {
+  navOpen.value = false;
+};
+
 const handleLogout = () => {
   auth.clearSession();
   router.push({ name: 'auth-start' });
@@ -55,6 +66,15 @@ const handleLogout = () => {
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .slide-enter-active,
 .slide-leave-active {
   transition:
