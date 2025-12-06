@@ -1,16 +1,14 @@
-# AGENTS.md
-
-AI エージェント向け共通ガイドライン
-（このリポジトリで作業するすべての AI エージェントが対象）
-
+---
+alwaysApply: true
+---
 # Core Rules（基礎レイヤー）
 
 このリポジトリ配下で作業するエージェントは、以下を必ず遵守する。
 
 ## 適用範囲
 
-- この AGENTS.md が置かれたフォルダ配下すべてに適用する。
-- 下層ディレクトリに AGENTS.md またはガイドがある場合、**その内容がこのルールを上書きする**。
+- このルールファイルが置かれたフォルダ配下すべてに適用する。
+- 下層ディレクトリにルールファイルまたはガイドがある場合、**その内容がこのルールを上書きする**。
 
 ## PowerShell（NoProfile）での実行ルール
 
@@ -53,22 +51,10 @@ chcp 65001 > $null;
 - 得た知見や実装アイデアは **チーム開発へ還元するための実験場** として活用する。
 - 本番利用を前提としないが、品質向上のための丁寧な実装を推奨する。
 
----
-
-# 2. Componentized Guides（詳細ガイドの参照）
+## 詳細ガイドの参照
 
 詳細ルールは、役割ごとにコンポーネント化されたドキュメントを参照する。
 
-## コーディング規約
-
-→ `/agents/coding-style.md`
-
-## フロントエンド（Vue / Vite / Tailwind）
-
-→ `/agents/frontend-guidelines.md`
-
-## バックエンド（API / サーバーレス）
-
-→ `/agents/backend-guidelines.md`A
-
----
+- コーディング規約: `/agents/coding-style.md`
+- フロントエンド（Vue / Vite / Tailwind）: `/agents/frontend-guidelines.md`
+- バックエンド（API / サーバーレス）: `/agents/backend-guidelines.md`
