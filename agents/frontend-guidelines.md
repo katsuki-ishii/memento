@@ -199,7 +199,30 @@ export const useUserStore = defineStore('user', {
 });
 ```
 
-## 6. コンポーネントの設計
+## 6. 命名規則
+
+プロジェクト全体で一貫性を保つため、以下の命名規則を遵守する。
+
+### 基本ルール
+
+- **コンポーネント名**: PascalCase、複数単語を使用（例: `HeaderBar.vue`, `AppShell.vue`）
+  - 理由: HTML 要素との衝突を避け、将来の HTML 要素や予約語との競合を防ぐため。単一単語（例: `Button`, `Input`）は避ける。
+- **変数・関数名**: camelCase（例: `userName`, `loadUser`, `handleClick`）
+- **定数名**: `UPPER_SNAKE_CASE`（再代入されない定数のみ、例: `MAX_RETRY_COUNT`, `API_BASE_URL`）
+- **boolean 変数**: `is`, `has`, `should`, `can` などのプレフィックスを使用（例: `isModalOpen`, `hasPermission`）
+- **配列**: 複数形の名詞を使用（例: `users`, `items`, `weeks`）
+
+### 特殊な命名
+
+- **Composables**: `use` プレフィックス（例: `useUser`, `useAuth`）
+- **Pinia ストア**: `useXxxStore` 形式、ストア ID は kebab-case（例: `useUserStore = defineStore('user', ...)`）
+- **サービスファイル**: `xxxService.js` 形式、関数は動詞で始める（例: `getUser`, `updateUser`）
+- **イベントハンドラ**: `handle` プレフィックス（例: `handleClick`, `handleSubmit`）
+- **Props**: camelCase、名詞または形容詞（例: `userName`, `isVisible`）
+- **Emits**: camelCase、動詞または動詞句（例: `update`, `save`, `close`）
+- **CSS クラス**: Tailwind を優先、カスタムクラスは kebab-case
+
+## 7. コンポーネントの設計
 
 - 再利用可能な UI 部品は components/common に配置する。
 - layout 系（ヘッダー、サイドバー）は components/layout に分離する。
@@ -238,7 +261,7 @@ onMounted(loadUser)
 
 ```
 
-## 7. setup の構造
+## 8. setup の構造
 
 以下の順番を統一的に採用する。
 
@@ -250,25 +273,254 @@ onMounted(loadUser)
 6. lifecycle hooks
 7. return
 
-## 8. watch と computed の方針
+## 9. watch と computed の方針
+
+### computed の方針
 
 - computed は値の導出専用とし、副作用を入れない。
+- 依存する値が変更されたときのみ再計算されるため、パフォーマンス面でも有利。
+- テンプレート内で複数回参照される値は computed に置き換える。
+
+```jsx
+// 良い例
+const fullName = computed(() => {
+  if (!user.value) return '';
+  return `${user.value.first} ${user.value.last}`;
+});
+
+// 悪い例（副作用を含む）
+const fullName = computed(() => {
+  console.log('計算中'); // 副作用
+  return `${user.value.first} ${user.value.last}`;
+});
+```
+
+### watch の方針
+
 - watch は副作用が必要な場合にのみ使う。
 - 可能であればイベント伝播や明示的な関数呼び出しで代替する。
+- 複数のソースを監視する場合は配列形式を使用する。
 
-## 9. props / emits
+#### watch を使うべきケース
+
+- ルートパラメータやクエリパラメータの変更を監視する場合。
+- 外部ライブラリとの連携（例: チャートライブラリの更新）。
+- フォームバリデーションの非同期処理。
+- ローカルストレージへの自動保存。
+
+#### watch を使わない方がよいケース
+
+- ユーザーアクションに直接反応する処理（イベントハンドラで対応）。
+- 親コンポーネントからの props 変更（computed や props の直接参照で対応可能な場合）。
+
+#### watch の実装パターン
+
+```jsx
+// 基本的な使い方
+watch(
+  () => route.fullPath,
+  (newPath, oldPath) => {
+    // 副作用処理
+    navOpen.value = false;
+  }
+);
+
+// 複数のソースを監視
+watch(
+  [() => user.value?.id, () => filter.value],
+  ([newUserId, newFilter], [oldUserId, oldFilter]) => {
+    // 両方の変更に反応
+  }
+);
+
+// immediate オプション（初期実行が必要な場合）
+watch(
+  () => props.id,
+  (newId) => {
+    loadData(newId);
+  },
+  { immediate: true }
+);
+
+// deep オプション（オブジェクトの深い変更を監視）
+watch(
+  () => form.value,
+  (newForm) => {
+    validateForm(newForm);
+  },
+  { deep: true }
+);
+
+// watchEffect（依存関係を自動追跡）
+watchEffect(() => {
+  if (user.value?.id) {
+    loadUserData(user.value.id);
+  }
+});
+```
+
+#### watch の停止
+
+- コンポーネントがアンマウントされる前に watch を停止する必要がある場合は、watch の戻り値（stop 関数）を保存して `onUnmounted` で呼び出す。
+
+```jsx
+const stopWatcher = watch(() => route.path, handleRouteChange);
+onUnmounted(() => {
+  stopWatcher();
+});
+```
+
+## 10. ディレクティブの方針
+
+### v-if と v-show の使い分け
+
+- **v-if**: 条件が false のとき DOM に要素が存在しない。切り替えコストが高いが、初期レンダリングが軽い。初期表示が不要な要素や、切り替え頻度が低い要素に使用。
+- **v-show**: 条件が false のとき `display: none` で非表示。切り替えコストが低いが、常に DOM に存在する。切り替え頻度が高い要素（タブ、モーダルなど）に使用。
+
+```jsx
+// v-if を使うケース（初期表示が不要、切り替えが少ない）
+<div v-if="isAdmin">
+  <AdminPanel />
+</div>
+
+// v-show を使うケース（頻繁に切り替わる）
+<nav v-show="isMenuOpen">
+  <MenuItems />
+</nav>
+```
+
+### v-for の方針
+
+- **key 属性は必須**。一意で安定した値を使用する（配列のインデックスは避ける）。
+- オブジェクトの id や、複合キー（例: `${item.type}-${item.id}`）を使用する。
+- **`in` と `of` の使い分け**: プロジェクト内で統一する。Vue の公式ドキュメントに合わせて **`in` を推奨**する。
+
+```jsx
+// 良い例（in を使用）
+<div v-for="week in weeks" :key="week.id">
+  {{ week.label }}
+</div>
+
+// 悪い例（インデックスを key に使用）
+<div v-for="(week, index) in weeks" :key="index">
+  {{ week.label }}
+</div>
+
+// オブジェクトの v-for（key は必須）
+<div v-for="(value, key) in object" :key="key">
+  {{ key }}: {{ value }}
+</div>
+
+// インデックスが必要な場合（key には id を使用）
+<div v-for="(week, index) in weeks" :key="week.id">
+  {{ index + 1 }}. {{ week.label }}
+</div>
+```
+
+**注意**: `in` と `of` は機能的に同じだが、プロジェクト内で統一する。Vue の公式ドキュメントでは `in` が使用されているため、`in` を推奨する。
+
+### v-model の方針
+
+- フォーム要素との双方向バインディングに使用。
+- カスタムコンポーネントで v-model を使用する場合は、`modelValue` props と `update:modelValue` emit を定義する。
+
+```jsx
+// 基本的な使い方
+<input v-model="searchText" type="text" />
+
+// カスタムコンポーネントでの v-model
+// 親コンポーネント
+<CustomInput v-model="userName" />
+
+// 子コンポーネント（CustomInput.vue）
+<script setup>
+const props = defineProps({
+  modelValue: String,
+});
+
+const emit = defineEmits(['update:modelValue']);
+
+function updateValue(newValue) {
+  emit('update:modelValue', newValue);
+}
+</script>
+```
+
+### イベントハンドラの命名
+
+- イベントハンドラは `handle` または動詞で始める（`handleClick`, `save`, `close` など）。
+- テンプレート内では簡潔な名前を使用し、複雑な処理は関数に分離する。
+
+```jsx
+// 良い例
+<button @click="handleSave">保存</button>
+<button @click="close">閉じる</button>
+
+// 悪い例（テンプレート内に複雑なロジック）
+<button @click="user.value && user.value.id ? updateUser(user.value) : createUser(user.value)">
+  保存
+</button>
+```
+
+### ディレクティブの記法
+
+- **省略記法を推奨**: `v-bind` は `:`、`v-on` は `@` を使用する。
+- 明示的な `v-bind` や `v-on` の記述は避ける（可読性と簡潔性のため）。
+
+```jsx
+// 推奨（省略記法）
+<div :class="itemClass" @click="handleClick">
+  {{ item.name }}
+</div>
+
+// 非推奨（明示的記法）
+<div v-bind:class="itemClass" v-on:click="handleClick">
+  {{ item.name }}
+</div>
+```
+
+### ディレクティブの順序
+
+複数のディレクティブを同じ要素に使用する場合、以下の順序を推奨する：
+
+1. `v-if` / `v-show` / `v-for`
+2. `:`（属性バインディング）
+3. `v-model`
+4. `@`（イベントハンドラ）
+5. `v-html` / `v-text`（使用は最小限に）
+
+```jsx
+// 推奨順序
+<div
+  v-if="isVisible"
+  v-for="item in items"
+  :key="item.id"
+  :class="itemClass"
+  @click="handleClick"
+>
+  {{ item.name }}
+</div>
+```
+
+### その他のディレクティブ
+
+- **v-html**: XSS のリスクがあるため、信頼できるソースからのみ使用。可能な限り避ける。
+- **v-text**: 通常は `{{ }}` で十分。特別な理由がない限り使用しない。
+- **v-once**: 一度だけレンダリングする。パフォーマンス最適化が必要な場合のみ使用。
+
+## 11. props / emits
 
 - defineProps / defineEmits を用いる。
 - props のデフォルト値は必要に応じて親で明示する。
 - emits は UI の動作を表す名前にする（save, close など）。
 
-## 10. views の方針
+## 12. views の方針
 
 - ページの読み込みや画面遷移に関する最小限の処理だけを書く。
 - ロジックは composables へ逃がす。
 - 不要な再レンダリングを避けるため state をストアに過剰に置かない。
 
-## 11. ref と reactive の使い分け指針
+## 13. ref と reactive の使い分け指針
 
 Vue の思想である「明確で予測可能なリアクティビティ」を保つため、ref と reactive の使い分けはチームで統一する。
 
@@ -285,16 +537,19 @@ ref を使うケース
 - 数値・文字列など単純な状態
 - API レスポンスの保持（構造が安定しない場合）
 
-## 12. レビュー観点
+## 14. レビュー観点
 
 - setup の構成順序は守られているか。
 - ロジックが composables へ適切に分離されているか。
+- 命名規則が遵守されているか（コンポーネント名、変数名、関数名など）。
 - 命名が用途を的確に表しているか。
 - services が API 呼び出し専用として保たれているか。
 - views や components が肥大化していないか。
 - stores に余計なロジックが入っていないか。
+- watch の使用が適切か（イベントハンドラで代替できないか）。
+- ディレクティブの使い分けが適切か（v-if vs v-show、v-for の key など）。
 
-## 13. 肥大化判断基準（コンポーネント・composables・stores）
+## 15. 肥大化判断基準（コンポーネント・composables・stores）
 
 ### コンポーネント（views / components）
 
