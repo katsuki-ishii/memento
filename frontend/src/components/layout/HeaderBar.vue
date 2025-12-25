@@ -1,6 +1,13 @@
+<!--
+  ヘッダーバーコンポーネント
+  アプリケーションの上部に表示されるヘッダーです
+  ロゴ、ナビゲーションボタン、テーマ切替ボタンを含みます
+-->
 <template>
   <header class="flex items-center border-b border-border bg-card/80 px-4 py-3 backdrop-blur">
+    <!-- 左側: ナビゲーションボタンとロゴ -->
     <div class="flex flex-1 items-center gap-3">
+      <!-- サイドナビゲーションを開くボタン（ダッシュボードでのみ表示） -->
       <button
         v-if="showNav"
         type="button"
@@ -10,12 +17,14 @@
       >
         ☰
       </button>
+      <!-- ロゴ（ホームへのリンク） -->
       <RouterLink to="/" class="flex items-center gap-2 text-sm font-semibold text-primary">
         <span class="h-2.5 w-2.5 rounded-full bg-accent" aria-hidden="true"></span>
         <span>Memento</span>
       </RouterLink>
     </div>
 
+    <!-- 右側: テーマ切替ボタン -->
     <div class="flex items-center gap-2">
       <button
         type="button"
@@ -33,22 +42,32 @@
 import { computed } from 'vue';
 import { useUiStore } from '../../stores/ui';
 
+// プロパティ定義
 const props = defineProps({
+  // ナビゲーションボタンを表示するかどうか
   showNav: {
     type: Boolean,
     default: false,
   },
 });
 
+// イベント定義
 const emit = defineEmits(['toggle-nav']);
 
+// UI ストアからテーマ情報を取得
 const ui = useUiStore();
 const theme = computed(() => ui.theme);
 
+/**
+ * テーマを切り替え
+ */
 const toggleTheme = () => {
   ui.toggleTheme();
 };
 
+/**
+ * サイドナビゲーションの開閉を親コンポーネントに通知
+ */
 const emitToggleNav = () => {
   if (!props.showNav) return;
   emit('toggle-nav');

@@ -1,3 +1,8 @@
+<!--
+  エラーページ
+  アプリケーションでエラーが発生した際に表示されるページです
+  ルーターガードでエラーが発生した場合などに表示されます
+-->
 <template>
   <main class="grid min-h-screen place-items-center bg-white px-6 py-16 text-gray-900">
     <div class="max-w-md space-y-4 text-center">
@@ -8,6 +13,7 @@
       <p class="text-sm text-gray-600">
         一時的な問題が発生したか、リクエストを完了できませんでした。時間をおいて再度お試しください。
       </p>
+      <!-- ナビゲーションリンク -->
       <div class="flex flex-wrap items-center justify-center gap-3">
         <RouterLink
           to="/dashboard"

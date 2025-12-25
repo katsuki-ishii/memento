@@ -1,3 +1,8 @@
+<!--
+  401 ページ（認証エラー）
+  認証が必要なページに未認証でアクセスした際に表示されるページです
+  現在はルーターガードで認証開始ページへリダイレクトするため、このページが表示されることは少ないです
+-->
 <template>
   <main class="flex min-h-screen items-center justify-center bg-white text-gray-900">
     <div class="text-center space-y-3">

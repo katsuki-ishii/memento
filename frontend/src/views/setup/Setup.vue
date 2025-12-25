@@ -1,3 +1,8 @@
+<!--
+  初期設定ページ
+  初回ログイン時にユーザーのプロフィール情報を設定するページです
+  ユーザー名、生年、寿命、週開始日などを入力します
+-->
 <template>
   <main class="min-h-screen bg-white text-gray-900">
     <div class="mx-auto flex max-w-2xl flex-col gap-8 px-6 py-16">
@@ -6,6 +11,7 @@
         <h1 class="text-3xl font-bold">プロフィールとライフグリッドの前提を入力</h1>
         <p class="text-sm text-gray-600">保存後、ダッシュボードに進みます。</p>
       </header>
+      <!-- プロフィール設定フォーム -->
       <form class="grid grid-cols-1 gap-4 md:grid-cols-2">
         <label class="space-y-1">
           <span class="text-sm font-medium text-gray-700">ユーザー名</span>
@@ -45,6 +51,7 @@
           </select>
         </label>
       </form>
+      <!-- アクションボタン -->
       <div class="flex gap-3">
         <button
           class="rounded-md bg-gray-900 px-4 py-2 text-white shadow-sm transition hover:bg-gray-800"

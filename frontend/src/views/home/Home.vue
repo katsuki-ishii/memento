@@ -1,6 +1,12 @@
+<!--
+  ホームページ
+  アプリケーションのランディングページです
+  アプリケーションの説明と、認証やダッシュボードへのリンクを提供します
+-->
 <template>
   <main class="min-h-screen bg-white text-gray-900">
     <div class="mx-auto flex max-w-5xl flex-col gap-8 px-6 py-16 md:flex-row md:items-center">
+      <!-- 左側: メインコンテンツ -->
       <div class="flex-1 space-y-4">
         <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">Memento</p>
         <h1 class="text-4xl font-bold tracking-tight md:text-5xl">
@@ -9,6 +15,7 @@
         <p class="text-lg text-gray-600 md:text-xl">
           週単位のライフグリッドで現在地を確認し、これからの時間をデザインしましょう。
         </p>
+        <!-- アクションボタン -->
         <div class="flex flex-wrap gap-3">
           <RouterLink
             to="/auth/start"
@@ -24,8 +31,10 @@
           </RouterLink>
         </div>
       </div>
+      <!-- 右側: ライフグリッドのサンプル表示 -->
       <div class="flex-1 rounded-xl border border-gray-200 bg-gray-50 p-6 shadow-sm">
         <p class="mb-4 text-sm font-semibold text-gray-500">ライフグリッド（サンプル）</p>
+        <!-- グリッドのプレビュー（6行 × 13列のダミー） -->
         <div class="grid grid-cols-12 gap-1 text-[10px] text-gray-500">
           <template v-for="row in 6" :key="row">
             <template v-for="col in 13" :key="`${row}-${col}`">

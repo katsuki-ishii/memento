@@ -1,8 +1,14 @@
+<!--
+  サイドナビゲーションコンポーネント
+  ダッシュボードページで表示されるサイドメニューです
+  ナビゲーションリンクとログアウトボタンを含みます
+-->
 <template>
   <aside
     class="relative flex h-screen w-64 flex-col overflow-y-auto border-r border-border bg-card/90 px-4 py-6 backdrop-blur"
     aria-label="サイドナビゲーション"
   >
+    <!-- 閉じるボタン（モバイル表示時などに表示） -->
     <button
       v-if="showClose"
       type="button"
@@ -13,8 +19,10 @@
       ✕
     </button>
 
+    <!-- ナビゲーションリンク -->
     <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted">ナビゲーション</p>
     <nav class="flex flex-col gap-2 text-sm">
+      <!-- ダッシュボードへのリンク -->
       <RouterLink
         to="/dashboard"
         class="rounded-md px-3 py-2 transition hover:bg-surface"
@@ -22,6 +30,7 @@
       >
         ダッシュボード
       </RouterLink>
+      <!-- 設定ページへのリンク -->
       <RouterLink
         to="/setup"
         class="rounded-md px-3 py-2 transition hover:bg-surface"
@@ -29,6 +38,7 @@
       >
         設定
       </RouterLink>
+      <!-- ログアウトボタン -->
       <button
         type="button"
         class="mt-4 rounded-md px-3 py-2 text-left text-danger transition hover:bg-surface"
@@ -41,12 +51,15 @@
 </template>
 
 <script setup>
+// プロパティ定義
 defineProps({
+  // 閉じるボタンを表示するかどうか
   showClose: {
     type: Boolean,
     default: false,
   },
 });
 
+// イベント定義
 const emit = defineEmits(['close', 'logout']);
 </script>

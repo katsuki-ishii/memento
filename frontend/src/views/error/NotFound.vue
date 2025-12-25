@@ -1,3 +1,8 @@
+<!--
+  404 ページ（ページが見つからない）
+  存在しない URL にアクセスした際に表示されるページです
+  ルーターの routes.js で最後に定義された catch-all ルートで表示されます
+-->
 <template>
   <main class="flex min-h-screen items-center justify-center bg-white text-gray-900">
     <div class="text-center space-y-3">
