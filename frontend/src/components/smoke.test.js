@@ -11,6 +11,6 @@ describe('smoke', () => {
         },
       },
     });
-    expect(wrapper.text()).toContain('あなたの時間を、週で見える化する');
+    expect(wrapper.text()).toContain('時間はもっとも貴重なリソースです');
   });
 });

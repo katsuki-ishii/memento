@@ -1,7 +1,7 @@
 <!--
   ダッシュボードページ
   アプリケーションのメインページです
-  ライフグリッド、進捗サマリー、イベント一覧を表示します
+  ライフグリッドを表示します
 -->
 <template>
   <main class="min-h-screen bg-white text-gray-900">
@@ -11,7 +11,6 @@
         <div>
           <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">ダッシュボード</p>
           <h1 class="text-3xl font-bold">ダッシュボード</h1>
-          <p class="text-sm text-gray-600">現在週のハイライトと記録済みイベントを確認できます。</p>
         </div>
         <RouterLink to="/setup" class="text-sm text-gray-600 underline underline-offset-4"
           >設定を編集</RouterLink
@@ -19,16 +18,10 @@
       </header>
 
       <!-- メインコンテンツ -->
-      <section class="grid gap-6 lg:grid-cols-[2fr,1fr]">
-        <!-- 左側: ライフグリッド -->
+      <section class="flex justify-center">
+        <!-- ライフグリッド -->
         <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-sm">
-          <p class="mb-3 text-sm font-semibold text-gray-600">グリッド（プレースホルダ）</p>
           <GridCanvas />
-        </div>
-        <!-- 右側: サマリーパネルとイベントドロワー -->
-        <div class="space-y-4">
-          <SummaryPanel />
-          <EventDrawer />
         </div>
       </section>
     </div>
@@ -37,6 +30,4 @@
 
 <script setup>
 import GridCanvas from './components/GridCanvas.vue';
-import SummaryPanel from './components/SummaryPanel.vue';
-import EventDrawer from './components/EventDrawer.vue';
 </script>
