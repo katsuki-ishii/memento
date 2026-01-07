@@ -2,7 +2,7 @@
 
 ## テーブル
 
-- 名前案: `Memento`
+- 名前案: `memento-user-event-dev`（dev。環境ごとに suffix を分ける想定）
 - パーティションキー (PK): `pk`
 - ソートキー (SK): `sk`
 - 主要属性: `weekId` (number), `username`, `birthYear`, `lifespan`, `weekStart`, `theme`, `title`, `mood`, `note`, `createdAt`

@@ -12,6 +12,9 @@ Parameters:
   CognitoDomainPrefix:
     Type: String
     Default: memento-dev
+  DynamoTableName:
+    Type: String
+    Default: memento-user-event-dev
   CallbackUrls:
     Type: CommaDelimitedList
     Default: http://localhost:5173/auth/callback
@@ -104,6 +107,7 @@ Resources:
           COGNITO_USER_POOL_DOMAIN: !Sub '${CognitoDomainPrefix}.auth.${AWS::Region}.amazoncognito.com'
           COGNITO_USER_POOL_REGION: !Ref AWS::Region
           CORS_ALLOW_ORIGIN: !Ref CorsAllowOrigin
+          DDB_TABLE_NAME: !Ref UserEventTable
       Events:
         ApiHealth:
           Type: Api
@@ -126,6 +130,35 @@ Resources:
             Path: /{proxy+}
             Method: ANY
 
+  UserEventTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Ref DynamoTableName
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: pk
+          AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+        - AttributeName: gsi1pk
+          AttributeType: S
+        - AttributeName: gsi1sk
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pk
+          KeyType: HASH
+        - AttributeName: sk
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: gsi1
+          KeySchema:
+            - AttributeName: gsi1pk
+              KeyType: HASH
+            - AttributeName: gsi1sk
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+
 Outputs:
   UserPoolId:
     Value: !Ref UserPool
@@ -137,3 +170,7 @@ Outputs:
     Value: !Sub 'https://${CognitoDomainPrefix}.auth.${AWS::Region}.amazoncognito.com'
   ApiBaseUrl:
     Value: !Sub 'https://${RestApi}.execute-api.${AWS::Region}.amazonaws.com/${ApiStageName}'
+  UserEventTableName:
+    Value: !Ref UserEventTable
+  UserEventTableArn:
+    Value: !GetAtt UserEventTable.Arn

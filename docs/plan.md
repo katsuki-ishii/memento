@@ -4,6 +4,12 @@
 
 - Memento 初期開発のWBSと進捗管理の基盤を示し、AGENTS.mdの運用ガイドに沿って作業を進める。
 
+## 明日やる候補
+
+- [ ] `/me/settings` の DynamoDB 永続化（GET/PATCH）
+- [ ] Lambda に DynamoDB 権限を付与（SAM Policies）
+- [ ] DTO バリデーション方針の決定（zod など）
+
 ## WBS（チェックリスト・3層）
 
 - [x] プロジェクト準備
