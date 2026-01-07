@@ -53,15 +53,15 @@
     - [x] `npm run dev` 起動確認
     - [x] `npm run test` 簡易実行
 - [ ] フロントエンド実装 (MVP)
-  - [ ] 基盤
-    - [ ] レイアウト/テーマ
+  - [x] 基盤
+    - [x] レイアウト/テーマ
       - [x] Appシェル（header/main/footer）とダッシュボード専用サイドナビ/ハンバーガーを組み込み
       - [x] Tailwind テーマトークン定義と `data-theme` 切替（body反映）
       - [x] トースト/ローディングのグローバルコンポーネントをプレースホルダで配置（UIストア連携前提）
-    - [ ] ルーター & 保護ルート（認証・初期設定ガード実装）
+    - [x] ルーター & 保護ルート（認証・初期設定ガード実装）
       - [x] `meta.requiresAuth/requiresSetup` を使った beforeEach ガード実装
       - [x] ガード中のローディング表示と `/error` フォールバック
-    - [ ] 状態管理 (Pinia) ストア雛形作成
+    - [x] 状態管理 (Pinia) ストア雛形作成
       - [x] `auth` / `profile` / `grid` / `ui` ストアの state・actions の枠と sessionStorage 永続化ラッパ
       - [x] 各ストアの Vitest スケルトン
   - [x] 認証（Hosted UI 前提）
@@ -75,37 +75,42 @@
       - [x] 原因: SideNav が `showNavButton && navOpen` 条件でレンダリングされ、`navOpen` 初期値 false のまま。デスクトップではトグルボタンが md:hidden のため開けず常に非表示。
     - [x] 対応デバイス方針: PC ブラウザのみを対象。レスポンシブ対応は不要（既存実装は影響しない範囲で残置可）
     - [x] Hosted UI 起動/コールバック stub（`startHostedLogin` / `handleCallback`）とルータ遷移分岐
-    - [ ] トークンリフレッシュ/エラーハンドリング
-      - [ ] refresh_token を使った更新処理の枠を authService に追加
-      - [ ] 失効時の再ログイン誘導とトースト表示
+    - [x] トークンリフレッシュ/エラーハンドリング
+      - [x] refresh_token を使った更新処理の枠を authService に追加
+      - [x] 失効時の再ログイン誘導とトースト表示
   - [ ] 機能UI
     - [ ] ライフグリッド表示
-      - [x] ダミー週データを Pinia から供給し、現在週ハイライト/イベント色分けの骨組みを実装
-      - [ ] サマリー（記録週数・残り週数）のダミー計算と表示
-      - [ ] `select-week` で選択週をストアに反映する
-    - [ ] 目標設定フォーム
-    - [ ] イベント CRUD UI
-    - [ ] API クライアント層
-      - [ ] http ラッパに Auth ヘッダー注入/エラー整形を実装
-      - [ ] settingsService / eventsService の関数枠と JSDoc を用意
-    - [ ] 設定フォーム骨組み（Setup）
-      - [ ] username/birthYear/lifespan/weekStart/theme を profile ストアと双方向に接続（まだ API なし）
+      - [x] ダミー週データを Pinia から供給し、現在週ハイライト/過去・未来色分けの骨組みを実装
+      - [x] サマリー（記録週数・残り週数）は不要のため実装対象から除外
+      - [x] `select-week` で選択週をストアに反映する
+      - [x] 選択週の表示をダッシュボードに反映
+    - [x] API クライアント層
+      - [x] http ラッパに Auth ヘッダー注入/401時の再ログイン誘導を実装
+      - [x] settingsService / eventsService の関数枠と JSDoc を用意
+      - [x] Settings/ダッシュボードで初期ロード時に service を呼び出す
+      - [x] Settings 初期ロード結果を profile ストアへ同期
+    - [x] イベント取得時のローディング表示
+    - [x] イベント取得中のフォーム無効化/エラー時トースト表示
+    - [x] イベント保存/削除失敗時のトースト表示
+    - [x] 設定フォーム骨組み（Setup）
+      - [x] username/birthYear/lifespan/weekStart/theme を profile ストアと双方向に接続（まだ API なし）
+      - [x] ストア同期後のフォーム表示整合を担保
 - [ ] バックエンド/API
   - [ ] 基盤
-    - [ ] Lambda 雛形/共通ロガー/エラー応答
+    - [x] Lambda 雛形/共通ロガー/エラー応答
+    - [x] SAM テンプレートで Cognito/API/Lambda を定義
     - [ ] DTO バリデーション
   - [ ] 機能API
     - [ ] イベント CRUD 実装
-    - [ ] 目標 CRUD 実装
     - [ ] ユーザー設定 取得/更新
   - [ ] 認証/認可
     - [ ] Cognito JWT 検証ミドルウェア
     - [ ] RBAC/スコープ定義（必要なら）
 - [ ] デプロイ/インフラ
-  - [ ] AWSコンソールで手動セットアップ
+  - [ ] SAM で IaC セットアップ
     - [ ] Cognito User Pool + App Client + ドメイン
     - [ ] API Gateway (REST) ステージ/CORS
-    - [ ] Lambda 関数デプロイ（zip/inline）
+    - [ ] Lambda 関数デプロイ（SAM）
     - [ ] DynamoDB テーブル作成（PK/SK/GSI/TTL）
   - [ ] CI/CD
     - [x] GitHub Actions (lint/format)

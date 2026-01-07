@@ -27,7 +27,7 @@ sequenceDiagram
 
 ## 失敗時フロー
 
-- `/oauth2/token` 失敗: メッセージ表示→ホームに戻す。
+- `/oauth2/token` 失敗: メッセージ表示→認証開始ページへ戻す。
 - `/me/settings` 401/403: トークン破棄し再ログイン誘導。
 - `/me/settings` 5xx: リトライボタンとステータス表示。
 
@@ -36,7 +36,7 @@ sequenceDiagram
 - `access_token`: メモリ主体（Pinia）。ページリロード対策として `sessionStorage` に `{ token, exp }` を保存。期限60秒前に自動更新。
 - `id_token`: メモリ＋`sessionStorage`。プロフィール表示用。API送信はしない。
 - `refresh_token`: `sessionStorage` のみに保存。`localStorage` には保存しない。タブを閉じると破棄。30日有効の前提で、再ログインで再発行。
-- リフレッシュ: `expires_in - 60s` を目安に `/oauth2/token` (grant_type=refresh_token) で更新し、トークン群を差し替え。失敗時は即ログアウトしてホームへ。
+- リフレッシュ: `expires_in - 60s` を目安に `/oauth2/token` (grant_type=refresh_token) で更新し、トークン群を差し替え。失敗時は即ログアウトして認証開始ページへ。
 - 同期: BroadcastChannel で複数タブのログアウト/更新を同期。
 
 ## ルーティング/ガード

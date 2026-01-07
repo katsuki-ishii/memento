@@ -50,7 +50,6 @@ setup / Setup.vue;
 dashboard / Dashboard.vue;
 components / GridCanvas.vue;
 SummaryPanel.vue;
-EventDrawer.vue;
 error / NotFound.vue;
 Unauthorized.vue;
 
