@@ -6,6 +6,7 @@
 
 import { useAuthStore } from '../stores/auth';
 import { useProfileStore } from '../stores/profile';
+import { useUiStore } from '../stores/ui';
 
 /**
  * ランダムなトークン文字列を生成
@@ -40,6 +41,18 @@ const getLogoutRedirectUri = () => {
   const origin =
     typeof globalThis !== 'undefined' && globalThis.location ? globalThis.location.origin : '';
   return origin ? `${origin}/auth/start` : '/auth/start';
+};
+
+/**
+ * 認証開始ページへのリダイレクト URL を構築
+ * 現在のパスを redirect クエリで保持します
+ */
+const buildAuthStartRedirect = () => {
+  if (typeof globalThis === 'undefined' || !globalThis.location) return '/auth/start';
+  const { pathname, search, hash } = globalThis.location;
+  const current = `${pathname}${search}${hash}`;
+  const redirect = encodeURIComponent(current || '/');
+  return `/auth/start?redirect=${redirect}`;
 };
 
 // OAuth state パラメータを保存するためのストレージキー
@@ -187,6 +200,89 @@ const exchangeCodeForTokens = async ({ code }) => {
 };
 
 /**
+ * リフレッシュトークンでアクセストークンを更新
+ *
+ * @param {Object} params - パラメータ
+ * @param {string} params.refreshToken - リフレッシュトークン
+ * @returns {Promise<Object>} トークン情報
+ */
+const refreshTokens = async ({ refreshToken }) => {
+  const domain = getEnv('VITE_COGNITO_DOMAIN');
+  const clientId = getEnv('VITE_COGNITO_USER_POOL_CLIENT_ID');
+
+  // 環境未設定時はスタブトークンを返す（開発用）
+  if (!domain || !clientId) {
+    const tokenSeed = randomToken();
+    return {
+      accessToken: `access-${tokenSeed}`,
+      refreshToken: refreshToken || `refresh-${tokenSeed}`,
+    };
+  }
+
+  const body = buildQuery({
+    grant_type: 'refresh_token',
+    client_id: clientId,
+    refresh_token: refreshToken,
+  });
+
+  const fetchFn = typeof globalThis !== 'undefined' ? globalThis.fetch : null;
+  if (!fetchFn) {
+    throw new Error('Fetch is not available in this environment');
+  }
+
+  const res = await fetchFn(`https://${domain}/oauth2/token`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body,
+  });
+
+  if (!res.ok) {
+    const errorBody = await res.text();
+    const err = new Error('Token refresh failed');
+    err.status = res.status;
+    err.body = errorBody;
+    throw err;
+  }
+
+  const data = await res.json();
+  return {
+    accessToken: data.access_token,
+    refreshToken: data.refresh_token || refreshToken,
+    idToken: data.id_token,
+    expiresIn: data.expires_in,
+    tokenType: data.token_type,
+  };
+};
+
+/**
+ * トークン更新に失敗した場合の共通処理
+ *
+ * @param {Error} error - エラー情報
+ * @returns {Object} 処理結果
+ */
+const handleRefreshFailure = (error) => {
+  const auth = useAuthStore();
+  const ui = useUiStore();
+
+  auth.clearSession();
+  ui.pushToast({
+    title: 'セッションが切れました',
+    message: '再ログインしてください。',
+    variant: 'error',
+  });
+
+  const redirectUrl = buildAuthStartRedirect();
+  if (typeof globalThis?.location !== 'undefined') {
+    globalThis.location.assign(redirectUrl);
+    return { refreshed: false, performedRedirect: true, redirectUrl, error };
+  }
+
+  return { refreshed: false, performedRedirect: false, redirectUrl, error };
+};
+
+/**
  * 認証コールバックを処理
  * Cognito Hosted UI からリダイレクトされた際に呼び出されます
  * 認証コードをトークンに交換し、ストアに保存します
@@ -244,6 +340,37 @@ export const handleCallback = async ({ code, state, error } = {}) => {
   }
 
   return { isSetupComplete: true };
+};
+
+/**
+ * セッションの更新（refresh_token を使用）
+ * 失敗時はセッションを破棄し、再ログインへ誘導します
+ *
+ * @param {Object} options - オプション
+ * @param {boolean} options.redirectOnFail - 失敗時に再ログインへ誘導するか
+ * @returns {Promise<Object>} 更新結果
+ */
+export const refreshSession = async ({ redirectOnFail = true } = {}) => {
+  const auth = useAuthStore();
+  const token = auth.refreshToken;
+
+  if (!token) {
+    const err = new Error('Missing refresh token');
+    if (redirectOnFail) return handleRefreshFailure(err);
+    throw err;
+  }
+
+  try {
+    const tokens = await refreshTokens({ refreshToken: token });
+    auth.setSession({
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken || token,
+    });
+    return { refreshed: true, tokens };
+  } catch (error) {
+    if (redirectOnFail) return handleRefreshFailure(error);
+    throw error;
+  }
 };
 
 /**
