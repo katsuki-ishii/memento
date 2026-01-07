@@ -98,7 +98,7 @@ export const useGridStore = defineStore('grid', () => {
           id,
           year,
           week: w,
-          hasEvent: w % 10 === 0, // デモ用: 10週ごとにイベントありとして設定
+          hasEvent: false, // 実際のイベントデータはAPIから取得
           isCurrent: id === current, // 現在の週かどうか
         });
       }
