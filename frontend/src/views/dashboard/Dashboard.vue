@@ -19,6 +19,7 @@
         <!-- ライフグリッド -->
         <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-sm">
           <GridCanvas @select-week="handleWeekSelect" />
+          <p class="mt-3 text-xs text-gray-500">選択中: {{ selectedWeekLabel }}</p>
         </div>
       </section>
     </div>
@@ -26,6 +27,7 @@
     <!-- イベント編集ダイアログ -->
     <EventDialog
       :is-open="isDialogOpen"
+      :is-loading="isLoadingEvents"
       :selected-week="selectedWeek"
       :event="selectedEvent"
       @close="handleDialogClose"
@@ -36,19 +38,22 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGridStore } from '../../stores/grid';
+import { useUiStore } from '../../stores/ui';
 import GridCanvas from './components/GridCanvas.vue';
 import EventDialog from './components/EventDialog.vue';
+import { listEvents, createEvent, updateEvent, deleteEvent } from '../../services/eventsService';
 
 // グリッドストア
 const grid = useGridStore();
-const { eventsByWeek } = storeToRefs(grid);
+const ui = useUiStore();
+const { eventsByWeek, selectedWeek } = storeToRefs(grid);
 
 // ダイアログの状態
 const isDialogOpen = ref(false);
-const selectedWeek = ref(null);
+const isLoadingEvents = ref(false);
 
 // 選択された週のイベントを取得
 const selectedEvent = computed(() => {
@@ -59,22 +64,54 @@ const selectedEvent = computed(() => {
   return events && events.length > 0 ? events[0] : null;
 });
 
+const selectedWeekLabel = computed(() => {
+  if (!selectedWeek.value) return '未選択';
+  return `${selectedWeek.value.year}年 第${selectedWeek.value.week + 1}週`;
+});
+
 /**
  * 週が選択された時の処理
  *
  * @param {Object} week - 選択された週のオブジェクト
  */
 const handleWeekSelect = (week) => {
-  selectedWeek.value = week;
+  grid.setSelectedWeek(week);
   isDialogOpen.value = true;
 };
+
+watch(
+  () => [isDialogOpen.value, selectedWeek.value?.id],
+  async ([open, weekId]) => {
+    if (!open || !weekId) return;
+    try {
+      isLoadingEvents.value = true;
+      const events = await listEvents({ weekId });
+      grid.setEvents({
+        ...eventsByWeek.value,
+        [weekId]: events || [],
+      });
+    } catch (error) {
+      ui.pushToast({
+        title: 'イベントの取得に失敗しました',
+        message: '時間をおいて再度お試しください。',
+        variant: 'error',
+      });
+      if (globalThis?.console) {
+        globalThis.console.error('Event load error', error);
+      }
+    } finally {
+      isLoadingEvents.value = false;
+    }
+  }
+);
 
 /**
  * ダイアログを閉じる
  */
 const handleDialogClose = () => {
   isDialogOpen.value = false;
-  selectedWeek.value = null;
+  grid.setSelectedWeek(null);
+  isLoadingEvents.value = false;
 };
 
 /**
@@ -83,34 +120,46 @@ const handleDialogClose = () => {
  * @param {Object} eventData - イベントデータ
  */
 const handleEventSave = async (eventData) => {
-  // TODO: API呼び出しに置き換える
-  // 現在はストアに一時保存
   const weekId = eventData.weekId;
   const existingEvents = eventsByWeek.value[weekId] || [];
 
-  if (selectedEvent.value) {
-    // 更新
-    const updatedEvents = existingEvents.map((e) =>
-      e.id === selectedEvent.value.id ? { ...e, ...eventData } : e
-    );
-    grid.setEvents({
-      ...eventsByWeek.value,
-      [weekId]: updatedEvents,
-    });
-  } else {
-    // 新規作成
-    const newEvent = {
-      id: `EVENT#${Date.now()}`,
-      ...eventData,
-      createdAt: Date.now(),
-    };
-    grid.setEvents({
-      ...eventsByWeek.value,
-      [weekId]: [...existingEvents, newEvent],
-    });
-  }
+  try {
+    if (selectedEvent.value) {
+      const updated = await updateEvent(selectedEvent.value.id, eventData);
+      const merged = {
+        ...selectedEvent.value,
+        ...eventData,
+        ...(updated || {}),
+      };
+      const updatedEvents = existingEvents.map((e) => (e.id === merged.id ? merged : e));
+      grid.setEvents({
+        ...eventsByWeek.value,
+        [weekId]: updatedEvents,
+      });
+    } else {
+      const created = await createEvent(eventData);
+      const newEvent = created || {
+        id: `EVENT#${Date.now()}`,
+        ...eventData,
+        createdAt: Date.now(),
+      };
+      grid.setEvents({
+        ...eventsByWeek.value,
+        [weekId]: [...existingEvents, newEvent],
+      });
+    }
 
-  handleDialogClose();
+    handleDialogClose();
+  } catch (error) {
+    ui.pushToast({
+      title: 'イベントの保存に失敗しました',
+      message: '時間をおいて再度お試しください。',
+      variant: 'error',
+    });
+    if (globalThis?.console) {
+      globalThis.console.error('Event save error', error);
+    }
+  }
 };
 
 /**
@@ -119,25 +168,37 @@ const handleEventSave = async (eventData) => {
  * @param {string} eventId - イベントID
  */
 const handleEventDelete = async (eventId) => {
-  // TODO: API呼び出しに置き換える
   if (!selectedWeek.value) return;
 
   const weekId = selectedWeek.value.id;
   const existingEvents = eventsByWeek.value[weekId] || [];
-  const filteredEvents = existingEvents.filter((e) => e.id !== eventId);
 
-  if (filteredEvents.length === 0) {
-    // イベントがなくなったら、その週のキーを削除
-    const updatedEvents = { ...eventsByWeek.value };
-    delete updatedEvents[weekId];
-    grid.setEvents(updatedEvents);
-  } else {
-    grid.setEvents({
-      ...eventsByWeek.value,
-      [weekId]: filteredEvents,
+  try {
+    await deleteEvent(eventId);
+    const filteredEvents = existingEvents.filter((e) => e.id !== eventId);
+
+    if (filteredEvents.length === 0) {
+      // イベントがなくなったら、その週のキーを削除
+      const updatedEvents = { ...eventsByWeek.value };
+      delete updatedEvents[weekId];
+      grid.setEvents(updatedEvents);
+    } else {
+      grid.setEvents({
+        ...eventsByWeek.value,
+        [weekId]: filteredEvents,
+      });
+    }
+
+    handleDialogClose();
+  } catch (error) {
+    ui.pushToast({
+      title: 'イベントの削除に失敗しました',
+      message: '時間をおいて再度お試しください。',
+      variant: 'error',
     });
+    if (globalThis?.console) {
+      globalThis.console.error('Event delete error', error);
+    }
   }
-
-  handleDialogClose();
 };
 </script>

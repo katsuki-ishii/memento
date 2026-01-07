@@ -121,6 +121,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useProfileStore } from '../../stores/profile';
+import { getSettings, updateSettings } from '../../services/settingsService';
 
 const profileStore = useProfileStore();
 const { profile } = storeToRefs(profileStore);
@@ -145,15 +146,30 @@ const currentYear = computed(() => new Date().getFullYear());
 /**
  * 既存のプロフィール情報をフォームに読み込む
  */
-onMounted(() => {
-  if (profile.value) {
-    form.value = {
-      username: profile.value.username || '',
-      birthYear: profile.value.birthYear || null,
-      lifespan: profile.value.lifespan || null,
-      weekStart: profile.value.weekStart || 'mon',
-      theme: profile.value.theme || 'light',
-    };
+onMounted(async () => {
+  try {
+    loading.value = true;
+    const settings = await getSettings();
+    const source = settings || profile.value;
+    if (settings) {
+      profileStore.setProfile(settings);
+    }
+    if (source) {
+      form.value = {
+        username: source.username || '',
+        birthYear: source.birthYear || null,
+        lifespan: source.lifespan || null,
+        weekStart: source.weekStart || 'mon',
+        theme: source.theme || 'light',
+      };
+    }
+  } catch (error) {
+    errors.value.push('設定の取得に失敗しました。');
+    if (globalThis?.console) {
+      globalThis.console.error('Settings load error', error);
+    }
+  } finally {
+    loading.value = false;
   }
 });
 
@@ -217,11 +233,10 @@ const handleSave = async () => {
       theme: form.value.theme,
     };
 
-    // プロフィールストアに保存
-    profileStore.setProfile(profileData);
+    const updatedProfile = await updateSettings(profileData);
 
-    // TODO: API呼び出し（将来実装）
-    // await settingsService.updateSettings(profileData);
+    // プロフィールストアに保存
+    profileStore.setProfile(updatedProfile || profileData);
 
     // 成功メッセージを表示
     saveSuccess.value = true;

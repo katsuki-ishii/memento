@@ -107,23 +107,51 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useProfileStore } from '../../stores/profile';
 import { useAuthStore } from '../../stores/auth';
+import { updateSettings } from '../../services/settingsService';
 
 const router = useRouter();
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
 
-// フォーム状態
-const form = ref({
-  username: '',
-  birthYear: null,
-  lifespan: null,
-  weekStart: 'mon',
-  theme: 'light',
+/**
+ * プロフィール情報をフォーム用に正規化
+ *
+ * @param {Object|null} value - プロフィール情報
+ * @returns {Object} 正規化済みプロフィール
+ */
+const normalizeProfile = (value) => ({
+  username: value?.username ?? '',
+  birthYear: value?.birthYear ?? null,
+  lifespan: value?.lifespan ?? null,
+  weekStart: value?.weekStart ?? 'mon',
+  theme: value?.theme ?? 'light',
 });
+
+/**
+ * プロフィールの同一性を判定
+ *
+ * @param {Object} left - 比較対象
+ * @param {Object} right - 比較対象
+ * @returns {boolean} 同一の場合 true
+ */
+const isSameProfile = (left, right) => {
+  const a = normalizeProfile(left);
+  const b = normalizeProfile(right);
+  return (
+    a.username === b.username &&
+    a.birthYear === b.birthYear &&
+    a.lifespan === b.lifespan &&
+    a.weekStart === b.weekStart &&
+    a.theme === b.theme
+  );
+};
+
+// フォーム状態
+const form = ref(normalizeProfile(profileStore.profile));
 
 // UI状態
 const loading = ref(false);
@@ -131,6 +159,28 @@ const errors = ref([]);
 
 // 現在年を取得
 const currentYear = computed(() => new Date().getFullYear());
+
+// ストア -> フォームへの同期
+watch(
+  () => profileStore.profile,
+  (next) => {
+    if (!isSameProfile(next, form.value)) {
+      form.value = normalizeProfile(next);
+    }
+  },
+  { deep: true }
+);
+
+// フォーム -> ストアへの同期
+watch(
+  form,
+  (next) => {
+    if (!isSameProfile(next, profileStore.profile)) {
+      profileStore.updateProfile(normalizeProfile(next));
+    }
+  },
+  { deep: true }
+);
 
 /**
  * フォームのバリデーション
@@ -191,11 +241,10 @@ const handleSave = async () => {
       theme: form.value.theme,
     };
 
+    await updateSettings(profileData);
+
     // プロフィールストアに保存
     profileStore.setProfile(profileData);
-
-    // TODO: API呼び出し（将来実装）
-    // await settingsService.updateSettings(profileData);
 
     // 認証ストアの設定完了フラグを更新
     authStore.markSetupComplete();

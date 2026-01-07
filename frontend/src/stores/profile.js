@@ -21,6 +21,16 @@ export const useProfileStore = defineStore('profile', () => {
   };
 
   /**
+   * プロフィール情報を部分更新
+   *
+   * @param {Object} value - 更新するプロフィール情報
+   */
+  const updateProfile = (value) => {
+    const current = profile.value ?? {};
+    profile.value = { ...current, ...(value ?? {}) };
+  };
+
+  /**
    * ローディング状態を設定
    *
    * @param {boolean} value - ローディング中かどうか
@@ -33,6 +43,7 @@ export const useProfileStore = defineStore('profile', () => {
     profile,
     loading,
     setProfile,
+    updateProfile,
     setLoading,
   };
 });

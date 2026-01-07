@@ -11,6 +11,7 @@ export const useGridStore = defineStore('grid', () => {
   // 状態（リアクティブな変数）
   const weeks = ref([]); // 週のリスト（各週は { id, year, week, hasEvent, isCurrent } の形式）
   const eventsByWeek = ref({}); // 週 ID をキーとしたイベント情報のマップ
+  const selectedWeek = ref(null); // 選択中の週
   const loading = ref(false); // データの読み込み中かどうか
 
   /**
@@ -29,6 +30,15 @@ export const useGridStore = defineStore('grid', () => {
    */
   const setEvents = (map) => {
     eventsByWeek.value = map ?? {};
+  };
+
+  /**
+   * 選択中の週を設定
+   *
+   * @param {Object|null} value - 選択された週
+   */
+  const setSelectedWeek = (value) => {
+    selectedWeek.value = value ?? null;
   };
 
   /**
@@ -118,11 +128,13 @@ export const useGridStore = defineStore('grid', () => {
   return {
     weeks,
     eventsByWeek,
+    selectedWeek,
     loading,
     currentWeekId,
     weeksByYear,
     setWeeks,
     setEvents,
+    setSelectedWeek,
     setLoading,
     ensureMockData,
   };

@@ -54,7 +54,8 @@
                   type="text"
                   placeholder="週のタイトルを入力"
                   maxlength="100"
-                  class="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                  :disabled="isLoading"
+                  class="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:cursor-not-allowed disabled:opacity-60"
                 />
                 <p class="mt-1 text-xs text-gray-500">{{ form.title.length }}/100</p>
               </div>
@@ -73,6 +74,7 @@
                         ? 'border-gray-400 bg-gray-50 text-gray-900'
                         : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50',
                     ]"
+                    :disabled="isLoading"
                     @click="form.mood = moodOption.value"
                   >
                     {{ moodOption.label }}
@@ -91,9 +93,15 @@
                   rows="4"
                   placeholder="週のメモを入力（任意）"
                   maxlength="1000"
-                  class="w-full resize-none rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
+                  :disabled="isLoading"
+                  class="w-full resize-none rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:cursor-not-allowed disabled:opacity-60"
                 ></textarea>
                 <p class="mt-1 text-xs text-gray-500">{{ form.note.length }}/1000</p>
+              </div>
+
+              <!-- ローディング表示 -->
+              <div v-if="isLoading" class="mb-4 rounded-md border border-gray-200 bg-gray-50 p-2">
+                <p class="text-xs text-gray-600">イベントを読み込み中...</p>
               </div>
 
               <!-- アクションボタン -->
@@ -101,7 +109,8 @@
                 <button
                   v-if="eventId"
                   type="button"
-                  class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                  class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  :disabled="isLoading"
                   @click="handleDelete"
                 >
                   削除
@@ -110,14 +119,16 @@
                 <div class="flex gap-2">
                   <button
                     type="button"
-                    class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                    class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+                    :disabled="isLoading"
                     @click="handleClose"
                   >
                     キャンセル
                   </button>
                   <button
                     type="submit"
-                    class="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+                    class="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
+                    :disabled="isLoading"
                   >
                     保存
                   </button>
@@ -136,6 +147,10 @@ import { ref, watch, computed } from 'vue';
 
 const props = defineProps({
   isOpen: {
+    type: Boolean,
+    default: false,
+  },
+  isLoading: {
     type: Boolean,
     default: false,
   },
@@ -216,7 +231,7 @@ const handleClose = () => {
  * 保存処理
  */
 const handleSave = () => {
-  if (!props.selectedWeek) return;
+  if (!props.selectedWeek || props.isLoading) return;
 
   emit('save', {
     weekId: props.selectedWeek.id,
@@ -230,7 +245,7 @@ const handleSave = () => {
  * 削除処理
  */
 const handleDelete = () => {
-  if (!eventId.value) return;
+  if (!eventId.value || props.isLoading) return;
 
   if (globalThis?.confirm?.('このイベントを削除しますか？')) {
     emit('delete', eventId.value);
