@@ -1,15 +1,15 @@
 <!--
-  初期設定ページ
-  初回ログイン時にユーザーのプロフィール情報を設定するページです
-  ユーザー名、生年、寿命、週開始日などを入力します
+  設定ページ
+  ユーザーのプロフィール情報を編集するページです
+  既存の設定を読み込んで編集できます
 -->
 <template>
   <main class="min-h-screen bg-white text-gray-900">
     <div class="mx-auto flex max-w-2xl flex-col gap-8 px-6 py-16">
       <header class="space-y-2">
-        <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">初期設定</p>
-        <h1 class="text-3xl font-bold">プロフィールとライフグリッドの前提を入力</h1>
-        <p class="text-sm text-gray-600">保存後、ダッシュボードに進みます。</p>
+        <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">設定</p>
+        <h1 class="text-3xl font-bold">プロフィールとライフグリッドの設定</h1>
+        <p class="text-sm text-gray-600">設定を変更して保存できます。</p>
       </header>
 
       <!-- エラーメッセージ -->
@@ -17,6 +17,14 @@
         <ul class="list-disc space-y-1 pl-5 text-sm text-red-700">
           <li v-for="error in errors" :key="error">{{ error }}</li>
         </ul>
+      </div>
+
+      <!-- 成功メッセージ -->
+      <div
+        v-if="saveSuccess"
+        class="rounded-md border border-green-200 bg-green-50 p-4 text-sm text-green-700"
+      >
+        設定を保存しました。
       </div>
 
       <!-- プロフィール設定フォーム -->
@@ -96,10 +104,13 @@
           @click="handleSave"
         >
           <span v-if="loading">保存中...</span>
-          <span v-else>保存してダッシュボードへ</span>
+          <span v-else>保存</span>
         </button>
-        <RouterLink to="/" class="px-4 py-2 text-sm text-gray-600 underline underline-offset-4">
-          ホームに戻る
+        <RouterLink
+          to="/dashboard"
+          class="px-4 py-2 text-sm text-gray-600 underline underline-offset-4"
+        >
+          ダッシュボードに戻る
         </RouterLink>
       </div>
     </div>
@@ -107,14 +118,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useProfileStore } from '../../stores/profile';
-import { useAuthStore } from '../../stores/auth';
 
-const router = useRouter();
 const profileStore = useProfileStore();
-const authStore = useAuthStore();
+const { profile } = storeToRefs(profileStore);
 
 // フォーム状態
 const form = ref({
@@ -128,9 +137,25 @@ const form = ref({
 // UI状態
 const loading = ref(false);
 const errors = ref([]);
+const saveSuccess = ref(false);
 
 // 現在年を取得
 const currentYear = computed(() => new Date().getFullYear());
+
+/**
+ * 既存のプロフィール情報をフォームに読み込む
+ */
+onMounted(() => {
+  if (profile.value) {
+    form.value = {
+      username: profile.value.username || '',
+      birthYear: profile.value.birthYear || null,
+      lifespan: profile.value.lifespan || null,
+      weekStart: profile.value.weekStart || 'mon',
+      theme: profile.value.theme || 'light',
+    };
+  }
+});
 
 /**
  * フォームのバリデーション
@@ -180,6 +205,7 @@ const handleSave = async () => {
 
   loading.value = true;
   errors.value = [];
+  saveSuccess.value = false;
 
   try {
     // プロフィール情報を整形
@@ -197,16 +223,18 @@ const handleSave = async () => {
     // TODO: API呼び出し（将来実装）
     // await settingsService.updateSettings(profileData);
 
-    // 認証ストアの設定完了フラグを更新
-    authStore.markSetupComplete();
-
-    // ダッシュボードへ遷移
-    await router.push({ name: 'dashboard' });
+    // 成功メッセージを表示
+    saveSuccess.value = true;
+    if (globalThis?.setTimeout) {
+      globalThis.setTimeout(() => {
+        saveSuccess.value = false;
+      }, 3000);
+    }
   } catch (error) {
     // エラーハンドリング
     errors.value.push('保存に失敗しました。もう一度お試しください。');
     if (globalThis?.console) {
-      globalThis.console.error('Setup save error', error);
+      globalThis.console.error('Settings save error', error);
     }
   } finally {
     loading.value = false;

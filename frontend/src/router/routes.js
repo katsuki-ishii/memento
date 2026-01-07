@@ -8,6 +8,7 @@ import Home from '../views/home/Home.vue';
 import AuthStart from '../views/auth/AuthStart.vue';
 import AuthCallback from '../views/auth/AuthCallback.vue';
 import Setup from '../views/setup/Setup.vue';
+import Settings from '../views/settings/Settings.vue';
 import Dashboard from '../views/dashboard/Dashboard.vue';
 import ErrorPage from '../views/error/Error.vue';
 import NotFound from '../views/error/NotFound.vue';
@@ -44,6 +45,15 @@ export const routes = [
     path: '/dashboard',
     name: 'dashboard',
     component: Dashboard,
+    meta: { requiresAuth: true, requiresSetup: true },
+  },
+
+  // 設定ページ（認証必須 + 初期設定完了必須）
+  // ユーザー設定を編集するページ
+  {
+    path: '/settings',
+    name: 'settings',
+    component: Settings,
     meta: { requiresAuth: true, requiresSetup: true },
   },
 

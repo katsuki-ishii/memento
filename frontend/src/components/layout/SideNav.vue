@@ -32,7 +32,7 @@
       </RouterLink>
       <!-- 設定ページへのリンク -->
       <RouterLink
-        to="/setup"
+        to="/settings"
         class="rounded-md px-3 py-2 transition hover:bg-surface"
         active-class="bg-surface font-semibold"
       >
