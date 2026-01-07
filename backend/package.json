@@ -1,0 +1,11 @@
+{
+  "name": "memento-backend",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "jose": "^5.3.0"
+  }
+}
