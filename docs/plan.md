@@ -104,7 +104,7 @@
     - [ ] イベント CRUD 実装
     - [ ] ユーザー設定 取得/更新
   - [ ] 認証/認可
-    - [ ] Cognito JWT 検証ミドルウェア
+    - [x] Cognito JWT 検証（API Gateway Authorizer + Lambda フォールバック）
     - [ ] RBAC/スコープ定義（必要なら）
 - [ ] デプロイ/インフラ
   - [ ] SAM で IaC セットアップ

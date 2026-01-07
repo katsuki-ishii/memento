@@ -9,29 +9,73 @@ const isAuthError = (error) => {
   return message.includes('JWT') || message.includes('token') || message.includes('Unauthorized');
 };
 
+const defaultSettings = () => ({
+  username: 'Demo User',
+  birthYear: 1990,
+  lifespan: 81,
+  weekStart: 'mon',
+  theme: 'light',
+});
+
+const parseJsonBody = (event) => {
+  if (!event?.body) return null;
+  const raw = event.isBase64Encoded
+    ? Buffer.from(event.body, 'base64').toString('utf8')
+    : event.body;
+  try {
+    return JSON.parse(raw);
+  } catch {
+    const err = new Error('Invalid JSON body');
+    err.statusCode = 400;
+    throw err;
+  }
+};
+
+const resolveAuth = async (event) => {
+  const claims = event?.requestContext?.authorizer?.claims;
+  if (claims) {
+    return { payload: claims, bypassed: false, source: 'authorizer' };
+  }
+
+  const token = getBearerToken(event.headers || {});
+  const { payload, bypassed } = await verifyAccessToken(token);
+  return { payload, bypassed: Boolean(bypassed), source: 'lambda' };
+};
+
 export const handler = async (event = {}) => {
   const requestId = event.requestContext?.requestId || 'unknown';
   const logger = createLogger(requestId);
 
   try {
     const method = event.httpMethod || 'GET';
+    const path = event.path || '/';
 
     if (method === 'OPTIONS') {
       return emptyResponse();
     }
 
-    const token = getBearerToken(event.headers || {});
-    const { payload, bypassed } = await verifyAccessToken(token);
+    const { payload, bypassed, source } = await resolveAuth(event);
 
     logger.info('request', {
       method,
-      path: event.path,
+      path,
       sub: payload?.sub,
       bypassed: Boolean(bypassed),
+      authSource: source,
     });
 
-    if (event.path === '/health') {
+    if (path === '/health') {
       return jsonResponse(200, { ok: true });
+    }
+
+    if (path === '/me/settings') {
+      if (method === 'GET') {
+        return jsonResponse(200, defaultSettings());
+      }
+      if (method === 'PATCH') {
+        const body = parseJsonBody(event) || {};
+        return jsonResponse(200, { ...defaultSettings(), ...body });
+      }
     }
 
     return jsonResponse(404, { message: 'Not Found' });

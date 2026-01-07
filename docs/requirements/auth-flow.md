@@ -3,6 +3,7 @@
 ## 全体像
 
 - フロントのみで完結する Authorization Code + PKCE。クライアントシークレット不要の公開クライアント設定。
+- API Gateway では Cognito User Pool Authorizer で JWT を検証し、Lambda には認証済みリクエストのみ到達させる。
 - ルート構成: `/`(ホーム), `/auth`(開始/中継), `/auth/callback`(Cognitoリダイレクト受け), `/setup`(初期設定), `/dashboard`。
 - トークン用途: API呼び出しは `Authorization: Bearer <access_token>`。`id_token` はプロフィール表示にのみ使用。
 

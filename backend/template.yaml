@@ -84,6 +84,12 @@ Resources:
         AllowMethods: "'GET,POST,PATCH,DELETE,OPTIONS'"
         AllowHeaders: "'Content-Type,Authorization'"
         AllowOrigin: !Sub "'${CorsAllowOrigin}'"
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        AddDefaultAuthorizerToCorsPreflight: false
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: !GetAtt UserPool.Arn
 
   ApiFunction:
     Type: AWS::Serverless::Function
@@ -99,6 +105,14 @@ Resources:
           COGNITO_USER_POOL_REGION: !Ref AWS::Region
           CORS_ALLOW_ORIGIN: !Ref CorsAllowOrigin
       Events:
+        ApiHealth:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /health
+            Method: GET
+            Auth:
+              Authorizer: NONE
         ApiRoot:
           Type: Api
           Properties:
