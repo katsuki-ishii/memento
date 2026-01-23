@@ -11,14 +11,13 @@
         <span class="h-4 w-4 rounded-sm bg-gray-200"></span> 過去（使った時間）
       </span>
       <span class="inline-flex items-center gap-1">
-        <span class="h-4 w-4 rounded-sm bg-accent"></span> 今週
-      </span>
-      <span class="inline-flex items-center gap-1">
         <span class="h-4 w-4 rounded-sm bg-gray-100"></span> 未来（残りの時間）
       </span>
       <span class="inline-flex items-center gap-1">
-        <span class="h-4 w-4 rounded-sm bg-green-400"></span>
-        緑は記録したイベントの感情スコアを表します
+        <span class="h-4 w-4 rounded-sm bg-accent"></span> 今週
+      </span>
+      <span class="inline-flex items-center gap-1">
+        <span class="h-4 w-4 rounded-sm bg-green-400"></span> 記録した週の幸福度や満足度
       </span>
     </div>
 

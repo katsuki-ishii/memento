@@ -10,7 +10,6 @@
       <header class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
           <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">ホーム</p>
-          <h1 class="text-3xl font-bold">ホーム</h1>
         </div>
       </header>
 
