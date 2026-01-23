@@ -8,7 +8,6 @@
 
 - [x] `/me/settings` の DynamoDB 永続化（GET/PATCH）
 - [x] Lambda に DynamoDB 権限を付与（SAM Policies）
-- [ ] DTO バリデーション方針の決定（zod など）
 
 ## WBS（チェックリスト・3層）
 
@@ -105,7 +104,6 @@
   - [ ] 基盤
     - [x] Lambda 雛形/共通ロガー/エラー応答
     - [x] SAM テンプレートで Cognito/API/Lambda を定義
-    - [ ] DTO バリデーション
   - [ ] 機能API
     - [x] イベント CRUD 実装
     - [x] ユーザー設定 取得/更新

@@ -3,7 +3,7 @@
 ## 認証
 
 - Cognito Hosted UI + PKCE。
-- Authorization: Bearer <access_token> を各リクエストに付与。
+- Authorization: Bearer <id_token> を各リクエストに付与。
 
 ## エンドポイント
 
