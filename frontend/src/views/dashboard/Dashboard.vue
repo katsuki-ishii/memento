@@ -17,9 +17,16 @@
       <!-- メインコンテンツ -->
       <section class="flex justify-center">
         <!-- ライフグリッド -->
-        <div class="rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-sm">
+        <div
+          v-if="!isLoadingProfile"
+          class="rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-sm"
+        >
           <GridCanvas @select-week="handleWeekSelect" />
           <p class="mt-3 text-xs text-gray-500">選択中: {{ selectedWeekLabel }}</p>
+        </div>
+        <!-- プロフィール情報読み込み中 -->
+        <div v-else class="flex items-center justify-center p-8">
+          <p class="text-sm text-gray-500">読み込み中...</p>
         </div>
       </section>
     </div>
@@ -57,6 +64,7 @@ const { eventsByWeek, selectedWeek } = storeToRefs(grid);
 // ダイアログの状態
 const isDialogOpen = ref(false);
 const isLoadingEvents = ref(false);
+const isLoadingProfile = ref(false);
 
 // 選択された週のイベントを取得
 const selectedEvent = computed(() => {
@@ -75,21 +83,27 @@ const selectedWeekLabel = computed(() => {
 /**
  * コンポーネントがマウントされた時にプロフィール情報を読み込む
  * 設定画面から戻ってきた場合や、直接ダッシュボードにアクセスした場合に対応
+ * プロフィール情報の取得が完了してからグリッドを表示する
  */
 onMounted(async () => {
   try {
+    isLoadingProfile.value = true;
     // プロフィール情報がまだ読み込まれていない場合は取得
-    if (!profileStore.profile) {
-      const settings = await getSettings();
-      if (settings) {
-        profileStore.setProfile(settings);
-      }
+    // 常に最新の設定を取得する（ログイン直後など、ストアが空の可能性があるため）
+    const settings = await getSettings();
+    if (settings) {
+      profileStore.setProfile(settings);
+    } else if (!profileStore.profile) {
+      // 設定が取得できず、ストアにもない場合はデフォルト値で進む
+      // （初期設定未完了の場合はルーターガードでリダイレクトされる）
     }
   } catch (error) {
     // エラーは無視（未設定の場合は後で初期設定画面にリダイレクトされる）
     if (globalThis?.console) {
       globalThis.console.error('Profile load error', error);
     }
+  } finally {
+    isLoadingProfile.value = false;
   }
 });
 
