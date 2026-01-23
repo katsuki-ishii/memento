@@ -48,7 +48,6 @@ export const handler = async (event = {}) => {
 
   try {
     const method = event.httpMethod || 'GET';
-    const path = event.path || '/';
 
     if (method === 'OPTIONS') {
       return emptyResponse();
@@ -56,31 +55,25 @@ export const handler = async (event = {}) => {
 
     const { payload, bypassed, source } = await resolveAuth(event);
 
-    logger.info('request', {
+    logger.info('settings request', {
       method,
-      path,
       sub: payload?.sub,
       bypassed: Boolean(bypassed),
       authSource: source,
     });
 
-    if (path === '/health') {
-      return jsonResponse(200, { ok: true });
+    if (method === 'GET') {
+      return jsonResponse(200, defaultSettings());
     }
 
-    if (path === '/me/settings') {
-      if (method === 'GET') {
-        return jsonResponse(200, defaultSettings());
-      }
-      if (method === 'PATCH') {
-        const body = parseJsonBody(event) || {};
-        return jsonResponse(200, { ...defaultSettings(), ...body });
-      }
+    if (method === 'PATCH') {
+      const body = parseJsonBody(event) || {};
+      return jsonResponse(200, { ...defaultSettings(), ...body });
     }
 
-    return jsonResponse(404, { message: 'Not Found' });
+    return jsonResponse(405, { message: 'Method Not Allowed' });
   } catch (error) {
-    logger.error('request failed', {
+    logger.error('settings request failed', {
       message: error?.message,
       stack: error?.stack,
     });

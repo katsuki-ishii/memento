@@ -94,20 +94,15 @@ Resources:
           CognitoAuthorizer:
             UserPoolArn: !GetAtt UserPool.Arn
 
-  ApiFunction:
+  HealthFunction:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub '${ProjectName}-api'
+      FunctionName: !Sub '${ProjectName}-health'
       CodeUri: src
-      Handler: handlers/api.handler
+      Handler: handlers/health.handler
       Environment:
         Variables:
-          COGNITO_USER_POOL_ID: !Ref UserPool
-          COGNITO_USER_POOL_CLIENT_ID: !Ref UserPoolClient
-          COGNITO_USER_POOL_DOMAIN: !Sub '${CognitoDomainPrefix}.auth.${AWS::Region}.amazoncognito.com'
-          COGNITO_USER_POOL_REGION: !Ref AWS::Region
           CORS_ALLOW_ORIGIN: !Ref CorsAllowOrigin
-          DDB_TABLE_NAME: !Ref UserEventTable
       Events:
         ApiHealth:
           Type: Api
@@ -117,18 +112,37 @@ Resources:
             Method: GET
             Auth:
               Authorizer: NONE
-        ApiRoot:
+
+  SettingsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${ProjectName}-settings'
+      CodeUri: src
+      Handler: handlers/settings.handler
+      Environment:
+        Variables:
+          COGNITO_USER_POOL_ID: !Ref UserPool
+          COGNITO_USER_POOL_CLIENT_ID: !Ref UserPoolClient
+          COGNITO_USER_POOL_DOMAIN: !Sub '${CognitoDomainPrefix}.auth.${AWS::Region}.amazoncognito.com'
+          COGNITO_USER_POOL_REGION: !Ref AWS::Region
+          CORS_ALLOW_ORIGIN: !Ref CorsAllowOrigin
+          DDB_TABLE_NAME: !Ref UserEventTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UserEventTable
+      Events:
+        SettingsGet:
           Type: Api
           Properties:
             RestApiId: !Ref RestApi
-            Path: /
-            Method: ANY
-        ApiProxy:
+            Path: /me/settings
+            Method: GET
+        SettingsPatch:
           Type: Api
           Properties:
             RestApiId: !Ref RestApi
-            Path: /{proxy+}
-            Method: ANY
+            Path: /me/settings
+            Method: PATCH
 
   UserEventTable:
     Type: AWS::DynamoDB::Table
