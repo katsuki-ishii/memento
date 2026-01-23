@@ -107,7 +107,7 @@
     - [x] SAM テンプレートで Cognito/API/Lambda を定義
     - [ ] DTO バリデーション
   - [ ] 機能API
-    - [ ] イベント CRUD 実装
+    - [x] イベント CRUD 実装
     - [x] ユーザー設定 取得/更新
   - [ ] 認証/認可
     - [x] Cognito JWT 検証（API Gateway Authorizer + Lambda フォールバック）
