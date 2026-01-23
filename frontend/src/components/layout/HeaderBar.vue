@@ -19,7 +19,6 @@
       </button>
       <!-- ロゴ（ホームへのリンク） -->
       <RouterLink to="/" class="flex items-center gap-2 text-sm font-semibold text-primary">
-        <span class="h-2.5 w-2.5 rounded-full bg-accent" aria-hidden="true"></span>
         <span>Memento</span>
       </RouterLink>
     </div>
