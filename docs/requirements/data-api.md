@@ -15,7 +15,7 @@
 
 - 入力: 同上フィールド（部分更新可）。
 - 応答: 更新後の設定（`createdAt`/`updatedAt` を含む）。
-- バリデーション: username/note 長さ、birthYear/lifespan の範囲、weekStart は `mon`/`sun`。
+- バリデーション: username 長さ、birthYear/lifespan の範囲、weekStart は `mon`/`sun`。
 
 ### GET /events?weekId=<number>
 

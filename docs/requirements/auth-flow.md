@@ -5,7 +5,7 @@
 - フロントのみで完結する Authorization Code + PKCE。クライアントシークレット不要の公開クライアント設定。
 - API Gateway では Cognito User Pool Authorizer で JWT を検証し、Lambda には認証済みリクエストのみ到達させる。
 - ルート構成: `/`(ホーム), `/auth/start`(認証開始), `/auth/callback`(Cognitoリダイレクト受け), `/setup`(初期設定), `/dashboard`。
-- トークン用途: API呼び出しは `Authorization: Bearer <access_token>`。`id_token` はプロフィール表示にのみ使用。
+- トークン用途: API呼び出しは `Authorization: Bearer <id_token>`。`access_token` は主に Cognito 連携用。
 
 ## シーケンス（メインフロー）
 
@@ -21,8 +21,8 @@ sequenceDiagram
   CG-->>FE: redirect /auth/callback?code=...
   FE->>CG: POST /oauth2/token (code + code_verifier)
   CG-->>FE: access_token, id_token, refresh_token, expires_in
-  FE->>API: GET /me/settings (Bearer access_token)
-  API-->>FE: settings (200) もしくは 404/空
+  FE->>API: GET /me/settings (Bearer id_token)
+  API-->>FE: settings (200, 未登録ならデフォルト)
   FE-->>U: 設定なし → /setup、設定あり → /dashboard
 ```
 
@@ -35,7 +35,7 @@ sequenceDiagram
 ## トークン保持ポリシー
 
 - `access_token`: メモリ主体（Pinia）。ページリロード対策として `sessionStorage` に `{ token, exp }` を保存。期限60秒前に自動更新。
-- `id_token`: メモリ＋`sessionStorage`。プロフィール表示用。API送信はしない。
+- `id_token`: メモリ＋`sessionStorage`。API送信に使用する。
 - `refresh_token`: `sessionStorage` のみに保存。`localStorage` には保存しない。タブを閉じると破棄。30日有効の前提で、再ログインで再発行。
 - リフレッシュ: `expires_in - 60s` を目安に `/oauth2/token` (grant_type=refresh_token) で更新し、トークン群を差し替え。失敗時は即ログアウトして認証開始ページへ。
 - 同期: BroadcastChannel で複数タブのログアウト/更新を同期。
