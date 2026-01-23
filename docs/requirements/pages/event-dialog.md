@@ -7,7 +7,7 @@
   - mood: 感情スコア（選択式、5段階）
     - 表示: 顔文字（😢 😞 😐 😊 😄）
     - 保存値: `'very-bad'` | `'bad'` | `'neutral'` | `'good'` | `'very-good'`
-  - weekId: 表示のみ（誕生日起点の週、変更不可）
+  - weekId: 表示のみ（`YYYY-WXX` の週ID、変更不可）
 - 操作:
   - 保存: POST（新規）/ PATCH（更新）
   - 削除: DELETE

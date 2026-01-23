@@ -5,7 +5,7 @@
 - 名前案: `memento-user-event-dev`（dev。環境ごとに suffix を分ける想定）
 - パーティションキー (PK): `pk`
 - ソートキー (SK): `sk`
-- 主要属性: `weekId` (number), `username`, `birthYear`, `lifespan`, `weekStart`, `theme`, `title`, `mood`, `note`, `createdAt`, `updatedAt`
+- 主要属性: `weekId` (string), `username`, `birthYear`, `lifespan`, `weekStart`, `theme`, `title`, `mood`, `note`, `createdAt`, `updatedAt`
 - TTL: 任意（現状なし）
 
 ## エンティティとキー
@@ -42,9 +42,8 @@
 
 ## weekId の算出
 
-- JST基準、週開始は月曜。
-- 誕生日からの経過日数 / 7 の整数値。
-- クライアントとバックエンドで同一ロジックを共有する（ユーティリティ化）。
+- 現在はグリッドの週ID（`YYYY-WXX`）を使用。
+- 誕生日からの経過週数の算出は将来対応。
 
 ## バリデーション指針
 

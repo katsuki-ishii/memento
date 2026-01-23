@@ -17,14 +17,14 @@
 - 応答: 更新後の設定（`createdAt`/`updatedAt` を含む）。
 - バリデーション: username 長さ、birthYear/lifespan の範囲、weekStart は `mon`/`sun`。
 
-### GET /events?weekId=<number>
+### GET /events?weekId=<string>
 
-- 誕生日起点の週IDでフィルタし、配列を返す。
-- 応答例: `[{ "id": "EVENT#1714123456789", "weekId": 1200, "title": "", "mood": "neutral", "note": "", "createdAt": 1714123456789 }]`
+- 週IDでフィルタし、配列を返す。
+- 応答例: `[{ "id": "EVENT#1714123456789", "weekId": "1990-W00", "title": "", "mood": "neutral", "note": "", "createdAt": 1714123456789 }]`
 
 ### POST /events
 
-- 入力: `{ "weekId": number, "title": string, "mood": "very-bad"|"bad"|"neutral"|"good"|"very-good", "note": string }`
+- 入力: `{ "weekId": "1990-W00", "title": string, "mood": "very-bad"|"bad"|"neutral"|"good"|"very-good", "note": string }`
 - 応答: 作成したイベント（id 付き）。
 
 ### PATCH /events/{id}
@@ -38,7 +38,7 @@
 
 ## バリデーション / 計算メモ
 
-- weekId: JST、週開始は月曜。誕生日からの経過日数を7で割った整数。
+- weekId: 現在はグリッドの週ID（`YYYY-WXX`）。誕生日起点の週数は将来対応。
 - id: Lambda 側で `EVENT#<timestamp>` を採番。
 - title: 長さ上限を設定（例: 100文字）。
 - mood: 定義済み列挙に限定。

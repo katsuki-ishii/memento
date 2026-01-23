@@ -143,6 +143,49 @@ Resources:
             Path: /me/settings
             Method: PATCH
 
+  EventsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${ProjectName}-events'
+      CodeUri: .
+      Handler: src/handlers/events.handler
+      Environment:
+        Variables:
+          COGNITO_USER_POOL_ID: !Ref UserPool
+          COGNITO_USER_POOL_CLIENT_ID: !Ref UserPoolClient
+          COGNITO_USER_POOL_DOMAIN: !Sub '${CognitoDomainPrefix}.auth.${AWS::Region}.amazoncognito.com'
+          COGNITO_USER_POOL_REGION: !Ref AWS::Region
+          CORS_ALLOW_ORIGIN: !Ref CorsAllowOrigin
+          DDB_TABLE_NAME: !Ref UserEventTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UserEventTable
+      Events:
+        EventsGet:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /events
+            Method: GET
+        EventsPost:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /events
+            Method: POST
+        EventsPatch:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /events/{id}
+            Method: PATCH
+        EventsDelete:
+          Type: Api
+          Properties:
+            RestApiId: !Ref RestApi
+            Path: /events/{id}
+            Method: DELETE
+
   UserEventTable:
     Type: AWS::DynamoDB::Table
     Properties:

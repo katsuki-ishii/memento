@@ -92,11 +92,10 @@
                   v-model="form.note"
                   rows="4"
                   placeholder="週のメモを入力（任意）"
-                  maxlength="1000"
                   :disabled="isLoading"
                   class="w-full resize-none rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:cursor-not-allowed disabled:opacity-60"
                 ></textarea>
-                <p class="mt-1 text-xs text-gray-500">{{ form.note.length }}/1000</p>
+                <p class="mt-1 text-xs text-gray-500">{{ form.note.length }}文字</p>
               </div>
 
               <!-- ローディング表示 -->
