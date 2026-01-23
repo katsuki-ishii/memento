@@ -79,8 +79,9 @@ const fetchJson = async (path, options = {}) => {
     ...(fetchOptions.headers || {}),
   };
 
-  if (withAuth && auth.accessToken) {
-    headers.Authorization = `Bearer ${auth.accessToken}`;
+  const token = auth.idToken || auth.accessToken;
+  if (withAuth && token) {
+    headers.Authorization = `Bearer ${token}`;
   }
 
   // ベース URL とパスを結合してリクエストを送信

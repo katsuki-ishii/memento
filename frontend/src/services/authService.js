@@ -364,6 +364,7 @@ export const refreshSession = async ({ redirectOnFail = true } = {}) => {
     const tokens = await refreshTokens({ refreshToken: token });
     auth.setSession({
       accessToken: tokens.accessToken,
+      idToken: tokens.idToken,
       refreshToken: tokens.refreshToken || token,
     });
     return { refreshed: true, tokens };

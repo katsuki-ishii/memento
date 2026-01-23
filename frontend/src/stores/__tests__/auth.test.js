@@ -12,13 +12,14 @@ describe('auth store', () => {
 
   it('persists session to sessionStorage', () => {
     const store = useAuthStore();
-    store.setSession({ accessToken: 'access', refreshToken: 'refresh' });
+    store.setSession({ accessToken: 'access', idToken: 'id', refreshToken: 'refresh' });
     store.markSetupComplete();
 
     const raw = globalThis?.sessionStorage?.getItem('memento_auth');
     const saved = raw ? JSON.parse(raw) : null;
     expect(saved).toMatchObject({
       accessToken: 'access',
+      idToken: 'id',
       refreshToken: 'refresh',
       isSetupComplete: true,
     });
@@ -28,7 +29,7 @@ describe('auth store', () => {
     if (globalThis?.sessionStorage) {
       globalThis.sessionStorage.setItem(
         'memento_auth',
-        JSON.stringify({ accessToken: 'a', refreshToken: 'r', isSetupComplete: true })
+        JSON.stringify({ accessToken: 'a', idToken: 'i', refreshToken: 'r', isSetupComplete: true })
       );
     }
 
@@ -36,6 +37,7 @@ describe('auth store', () => {
     store.hydrateFromStorage();
 
     expect(store.isAuthenticated).toBe(true);
+    expect(store.idToken).toBe('i');
     expect(store.refreshToken).toBe('r');
     expect(store.isSetupComplete).toBe(true);
   });

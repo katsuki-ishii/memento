@@ -19,13 +19,14 @@ const getStorage = () => (typeof globalThis !== 'undefined' ? globalThis.session
 export const useAuthStore = defineStore('auth', () => {
   // 状態（リアクティブな変数）
   const accessToken = ref(null); // API 呼び出しに使用するアクセストークン
+  const idToken = ref(null); // Cognito のIDトークン（API Gateway Authorizer 用）
   const refreshToken = ref(null); // アクセストークンの有効期限切れ時に使用するリフレッシュトークン
   const isSetupComplete = ref(false); // 初期設定（プロフィール設定）が完了しているか
   const hydrated = ref(false); // ストレージからの復元が完了したか（重複読み込みを防ぐ）
 
   // 計算プロパティ（ゲッター）
   // アクセストークンが存在すれば認証済みとみなします
-  const isAuthenticated = computed(() => Boolean(accessToken.value));
+  const isAuthenticated = computed(() => Boolean(idToken.value || accessToken.value));
 
   /**
    * セッションストレージから認証情報を復元
@@ -48,6 +49,7 @@ export const useAuthStore = defineStore('auth', () => {
       // JSON 文字列をパースして状態を復元
       const parsed = JSON.parse(raw);
       accessToken.value = parsed?.accessToken ?? null;
+      idToken.value = parsed?.idToken ?? null;
       refreshToken.value = parsed?.refreshToken ?? null;
       isSetupComplete.value = Boolean(parsed?.isSetupComplete);
     } catch (error) {
@@ -69,6 +71,7 @@ export const useAuthStore = defineStore('auth', () => {
     if (!storage) return;
     const payload = {
       accessToken: accessToken.value,
+      idToken: idToken.value,
       refreshToken: refreshToken.value,
       isSetupComplete: isSetupComplete.value,
     };
@@ -85,6 +88,7 @@ export const useAuthStore = defineStore('auth', () => {
    */
   const setSession = (tokens) => {
     accessToken.value = tokens?.accessToken ?? null;
+    idToken.value = tokens?.idToken ?? null;
     refreshToken.value = tokens?.refreshToken ?? null;
     persist();
   };
@@ -104,6 +108,7 @@ export const useAuthStore = defineStore('auth', () => {
    */
   const clearSession = () => {
     accessToken.value = null;
+    idToken.value = null;
     refreshToken.value = null;
     isSetupComplete.value = false;
     const storage = getStorage();
@@ -113,6 +118,7 @@ export const useAuthStore = defineStore('auth', () => {
   return {
     // state
     accessToken,
+    idToken,
     refreshToken,
     isSetupComplete,
     hydrated,
