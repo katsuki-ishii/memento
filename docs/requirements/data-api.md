@@ -29,7 +29,7 @@
 
 ### PATCH /events/{id}
 
-- 入力: POST と同じフィールドの部分更新。
+- 入力: POST と同じフィールドの部分更新（`weekId` は変更不可）。
 - id は `EVENT#<timestamp>` 形式。
 
 ### DELETE /events/{id}
