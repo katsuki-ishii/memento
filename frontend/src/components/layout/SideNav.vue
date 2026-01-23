@@ -20,7 +20,7 @@
     </button>
 
     <!-- ナビゲーションリンク -->
-    <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted">ナビゲーション</p>
+    <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted">サイドメニュー</p>
     <nav class="flex flex-col gap-2 text-sm">
       <!-- ホームへのリンク -->
       <RouterLink
