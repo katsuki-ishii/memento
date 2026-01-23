@@ -68,9 +68,10 @@ export const updateEvent = async (eventId, payload) => {
       ...payload,
     };
   }
+  const { weekId: _weekId, ...updates } = payload ?? {};
   return fetchJson(`/events/${encodeURIComponent(eventId)}`, {
     method: 'PATCH',
-    body: JSON.stringify(payload ?? {}),
+    body: JSON.stringify(updates),
   });
 };
 

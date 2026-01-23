@@ -167,7 +167,8 @@ export const handler = async (event = {}) => {
       throw error;
     }
 
-    const eventId = event.pathParameters?.id || null;
+    const rawEventId = event.pathParameters?.id || null;
+    const eventId = rawEventId ? decodeURIComponent(rawEventId) : null;
 
     if (!eventId) {
       if (method === 'GET') {
