@@ -78,8 +78,8 @@ const buildAuthorizeUrl = (state) => {
   if (!domain || !clientId) return null;
 
   const redirectUri = getRedirectUri();
-  // スコープ: openid（OpenID Connect）、email、profile（ユーザー情報）、offline_access（リフレッシュトークン）
-  const scope = getEnv('VITE_COGNITO_SCOPE') || 'openid email profile offline_access';
+  // スコープ: openid（OpenID Connect）、email、profile（ユーザー情報）
+  const scope = getEnv('VITE_COGNITO_SCOPE') || 'openid email profile';
   const search = buildQuery({
     response_type: 'code', // 認証コードフローを使用
     client_id: clientId,

@@ -20,6 +20,7 @@ module.exports = [
   {
     ignores: [
       'node_modules',
+      '.aws-sam',
       'dist',
       'package-lock.json',
       'frontend/node_modules',

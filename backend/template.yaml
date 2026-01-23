@@ -61,7 +61,6 @@ Resources:
         - openid
         - email
         - profile
-        - offline_access
       CallbackURLs: !Ref CallbackUrls
       LogoutURLs: !Ref LogoutUrls
       SupportedIdentityProviders:
@@ -98,8 +97,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub '${ProjectName}-health'
-      CodeUri: src
-      Handler: handlers/health.handler
+      CodeUri: .
+      Handler: src/handlers/health.handler
       Environment:
         Variables:
           CORS_ALLOW_ORIGIN: !Ref CorsAllowOrigin
@@ -117,8 +116,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub '${ProjectName}-settings'
-      CodeUri: src
-      Handler: handlers/settings.handler
+      CodeUri: .
+      Handler: src/handlers/settings.handler
       Environment:
         Variables:
           COGNITO_USER_POOL_ID: !Ref UserPool
