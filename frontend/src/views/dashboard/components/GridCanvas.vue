@@ -6,15 +6,19 @@
 <template>
   <div class="space-y-4">
     <!-- 凡例（グリッドの色の意味を説明） -->
-    <div class="flex items-center gap-3 text-xs text-muted">
+    <div class="flex flex-wrap items-center gap-3 text-xs text-muted">
       <span class="inline-flex items-center gap-1">
-        <span class="h-4 w-4 rounded-sm bg-gray-300"></span> 過去（使った時間）
+        <span class="h-4 w-4 rounded-sm bg-gray-200"></span> 過去（使った時間）
       </span>
       <span class="inline-flex items-center gap-1">
         <span class="h-4 w-4 rounded-sm bg-accent"></span> 今週
       </span>
       <span class="inline-flex items-center gap-1">
         <span class="h-4 w-4 rounded-sm bg-gray-100"></span> 未来（残りの時間）
+      </span>
+      <span class="inline-flex items-center gap-1">
+        <span class="h-4 w-4 rounded-sm bg-green-400"></span>
+        緑は記録したイベントの感情スコアを表します
       </span>
     </div>
 
@@ -59,7 +63,7 @@ const emit = defineEmits(['select-week']);
 // ストアからデータを取得
 const grid = useGridStore();
 const profileStore = useProfileStore();
-const { weeksByYear, currentWeekId } = storeToRefs(grid);
+const { weeksByYear, currentWeekId, eventsByWeek } = storeToRefs(grid);
 const { profile } = storeToRefs(profileStore);
 
 /**
@@ -111,8 +115,20 @@ const chunkWeeks = (array, size) => {
 };
 
 /**
+ * 感情スコアに応じた色のマッピング
+ */
+const moodColorMap = {
+  'very-good': 'bg-green-600',
+  good: 'bg-green-400',
+  neutral: 'bg-green-300',
+  bad: 'bg-green-200',
+  'very-bad': 'bg-green-100',
+};
+
+/**
  * 週の状態に応じた CSS クラスを返す
  * 過去（使った時間）、現在週、未来（残りの時間）を色分け
+ * イベントがある場合は感情スコアに応じた色を返す
  *
  * @param {Object} week - 週のオブジェクト
  * @returns {string} CSS クラス名
@@ -120,19 +136,29 @@ const chunkWeeks = (array, size) => {
 const weekClass = (week) => {
   const currentId = currentWeekId.value;
 
-  // 現在の週はアクセントカラー
+  // 現在の週はアクセントカラー（イベントの有無に関わらず）
   if (week.isCurrent || week.id === currentId) {
     return 'bg-accent';
   }
 
+  // その週のイベントを取得
+  const weekEvents = eventsByWeek.value[week.id];
+  const event = weekEvents && weekEvents.length > 0 ? weekEvents[0] : null;
+
+  // イベントがある場合は感情スコアに応じた色を返す
+  if (event && event.mood && moodColorMap[event.mood]) {
+    return moodColorMap[event.mood];
+  }
+
+  // イベントがない場合の処理
   // 過去と未来を比較
   // 週IDは "YYYY-WXX" 形式なので、文字列比較で過去/未来を判定
   if (week.id < currentId) {
-    // 過去（使った時間）: 濃いグレー
-    return 'bg-gray-300';
+    // 過去（使った時間）: 薄いグレー
+    return 'bg-gray-200';
   }
 
-  // 未来（残りの時間）: 薄いグレー
+  // 未来（残りの時間）: さらに薄いグレー
   return 'bg-gray-100';
 };
 </script>

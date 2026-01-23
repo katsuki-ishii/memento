@@ -20,6 +20,19 @@ const listEventsByWeek = async (sub, weekId) => {
   return Items || [];
 };
 
+const listAllEvents = async (sub) => {
+  const command = new QueryCommand({
+    TableName: getTableName(),
+    KeyConditionExpression: 'pk = :pk and begins_with(sk, :sk)',
+    ExpressionAttributeValues: {
+      ':pk': `USER#${sub}`,
+      ':sk': 'EVENT#',
+    },
+  });
+  const { Items } = await getDocumentClient().send(command);
+  return Items || [];
+};
+
 const createEvent = async (payload) => {
   const command = new PutCommand({
     TableName: getTableName(),
@@ -73,4 +86,4 @@ const deleteEvent = async (sub, eventId) => {
   return Attributes || null;
 };
 
-export { listEventsByWeek, createEvent, updateEvent, deleteEvent };
+export { listEventsByWeek, listAllEvents, createEvent, updateEvent, deleteEvent };

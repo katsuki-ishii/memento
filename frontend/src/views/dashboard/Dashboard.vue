@@ -81,7 +81,7 @@ const selectedWeekLabel = computed(() => {
 });
 
 /**
- * コンポーネントがマウントされた時にプロフィール情報を読み込む
+ * コンポーネントがマウントされた時にプロフィール情報と全イベントを読み込む
  * 設定画面から戻ってきた場合や、直接ホームにアクセスした場合に対応
  * プロフィール情報の取得が完了してからグリッドを表示する
  */
@@ -96,6 +96,27 @@ onMounted(async () => {
     } else if (!profileStore.profile) {
       // 設定が取得できず、ストアにもない場合はデフォルト値で進む
       // （初期設定未完了の場合はルーターガードでリダイレクトされる）
+    }
+
+    // 全イベントを取得してグリッドストアに保存
+    try {
+      const allEvents = await listEvents();
+      // 週IDをキーとしたマップに変換
+      const eventsMap = {};
+      (allEvents || []).forEach((event) => {
+        if (event.weekId) {
+          if (!eventsMap[event.weekId]) {
+            eventsMap[event.weekId] = [];
+          }
+          eventsMap[event.weekId].push(event);
+        }
+      });
+      grid.setEvents(eventsMap);
+    } catch (error) {
+      // イベント取得エラーは無視（グリッドは表示されるが色分けされない）
+      if (globalThis?.console) {
+        globalThis.console.error('Events load error', error);
+      }
     }
   } catch (error) {
     // エラーは無視（未設定の場合は後で初期設定画面にリダイレクトされる）

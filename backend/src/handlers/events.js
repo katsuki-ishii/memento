@@ -1,7 +1,13 @@
 import { createLogger } from '../lib/logger.js';
 import { emptyResponse, jsonResponse } from '../lib/response.js';
 import { getBearerToken, verifyAccessToken } from '../lib/auth.js';
-import { createEvent, deleteEvent, listEventsByWeek, updateEvent } from '../lib/eventsStore.js';
+import {
+  createEvent,
+  deleteEvent,
+  listEventsByWeek,
+  listAllEvents,
+  updateEvent,
+} from '../lib/eventsStore.js';
 
 const MOOD_OPTIONS = new Set(['very-bad', 'bad', 'neutral', 'good', 'very-good']);
 
@@ -173,16 +179,21 @@ export const handler = async (event = {}) => {
     if (!eventId) {
       if (method === 'GET') {
         const weekId = normalizeWeekId(event.queryStringParameters?.weekId);
-        if (!weekId) {
-          const error = new Error('weekId is required');
-          error.statusCode = 400;
-          throw error;
+        if (weekId) {
+          // 特定週のイベントを取得
+          const items = await listEventsByWeek(payload.sub, weekId);
+          return jsonResponse(
+            200,
+            items.map((item) => normalizeEvent(item))
+          );
+        } else {
+          // weekIdがない場合は全イベントを取得
+          const items = await listAllEvents(payload.sub);
+          return jsonResponse(
+            200,
+            items.map((item) => normalizeEvent(item))
+          );
         }
-        const items = await listEventsByWeek(payload.sub, weekId);
-        return jsonResponse(
-          200,
-          items.map((item) => normalizeEvent(item))
-        );
       }
 
       if (method === 'POST') {
