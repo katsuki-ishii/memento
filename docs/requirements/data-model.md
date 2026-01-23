@@ -5,7 +5,7 @@
 - 名前案: `memento-user-event-dev`（dev。環境ごとに suffix を分ける想定）
 - パーティションキー (PK): `pk`
 - ソートキー (SK): `sk`
-- 主要属性: `weekId` (number), `username`, `birthYear`, `lifespan`, `weekStart`, `theme`, `title`, `mood`, `note`, `createdAt`
+- 主要属性: `weekId` (number), `username`, `birthYear`, `lifespan`, `weekStart`, `theme`, `title`, `mood`, `note`, `createdAt`, `updatedAt`
 - TTL: 任意（現状なし）
 
 ## エンティティとキー
@@ -13,7 +13,7 @@
 - UserSettings
   - pk: `USER#<sub>`
   - sk: `SETTINGS`
-  - attrs: username, birthYear, lifespan, weekStart (mon), theme, createdAt
+  - attrs: username, birthYear, lifespan, weekStart (mon/sun), theme, createdAt, updatedAt
 
 - Event
   - pk: `USER#<sub>`

@@ -9,12 +9,13 @@
 
 ### GET /me/settings
 
-- 応答: `{ "username": "", "birthYear": 1990, "lifespan": 85, "weekStart": "mon", "theme": "light" }`
+- 応答: `{ "username": "", "birthYear": 1990, "lifespan": 85, "weekStart": "mon", "theme": "light", "createdAt": 1737600000000, "updatedAt": 1737600000000 }`
 
 ### PATCH /me/settings
 
 - 入力: 同上フィールド（部分更新可）。
-- バリデーション: username/note 長さ、birthYear/lifespan の範囲、weekStart は mon 固定予定。
+- 応答: 更新後の設定（`createdAt`/`updatedAt` を含む）。
+- バリデーション: username/note 長さ、birthYear/lifespan の範囲、weekStart は `mon`/`sun`。
 
 ### GET /events?weekId=<number>
 

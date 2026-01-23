@@ -7,7 +7,7 @@
 ## ハンドラ設計
 
 - 共通: 入力検証、認証(JWT)、エラーハンドリング、ログをユーティリティ化。
-- 環境変数: `DYNAMO_TABLE_MEMENTO`, `AWS_REGION`, `API_STAGE` などを使用。
+- 環境変数: `DDB_TABLE_NAME`, `AWS_REGION`, `API_STAGE` などを使用。
 - レスポンスは JSON、`statusCode` と body を明示。CORS ヘッダを付与。
 
 ## データモデル(案)
