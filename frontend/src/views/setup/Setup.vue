@@ -8,7 +8,7 @@
     <div class="mx-auto flex max-w-2xl flex-col gap-8 px-6 py-16">
       <header class="space-y-2">
         <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">初期設定</p>
-        <h1 class="text-3xl font-bold">プロフィールとライフグリッドの前提を入力</h1>
+        <h1 class="text-3xl font-bold">プロフィールと寿命を入力</h1>
         <p class="text-sm text-gray-600">保存後、ホームに進みます。</p>
       </header>
 
