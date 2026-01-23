@@ -7,6 +7,7 @@
 import { useAuthStore } from '../stores/auth';
 import { useProfileStore } from '../stores/profile';
 import { useUiStore } from '../stores/ui';
+import { getSettings } from './settingsService';
 
 /**
  * ランダムなトークン文字列を生成
@@ -325,21 +326,46 @@ export const handleCallback = async ({ code, state, error } = {}) => {
 
   // トークンをストアに保存（セッションストレージにも自動保存される）
   auth.setSession(tokens);
-  // TODO: API で設定完了判定に置き換え
-  auth.markSetupComplete();
-  // プロフィール情報を設定（現在はダミーデータ、今後は API から取得）
-  profile.setProfile({
-    username: 'Demo User',
-    lifespan: 81,
-    weekStart: 'mon',
-  });
+
+  // DynamoDBから設定を取得して、設定完了状態を判定
+  let isSetupComplete = false;
+  try {
+    const settings = await getSettings();
+    if (settings && settings.birthYear && settings.lifespan) {
+      // 設定が存在し、必須項目が揃っている場合
+      isSetupComplete = true;
+      // プロフィールストアに設定を反映
+      profile.setProfile(settings);
+      // 設定完了状態をストアに反映
+      auth.markSetupComplete();
+    } else {
+      // 設定が存在しない、または不完全な場合
+      isSetupComplete = false;
+      profile.setProfile(null); // ストアをクリア
+      // isSetupComplete は false のまま（デフォルト値）
+    }
+  } catch (error) {
+    // API呼び出しに失敗した場合（404、ネットワークエラーなど）
+    // 404の場合は設定なしとして扱う（新規ユーザー）
+    // その他のエラーも安全側に倒して設定未完了として扱う
+    const isNotFound = error?.status === 404;
+    isSetupComplete = false;
+    profile.setProfile(null);
+    if (globalThis?.console) {
+      if (isNotFound) {
+        globalThis.console.log('Settings not found (new user)');
+      } else {
+        globalThis.console.error('Settings fetch error in callback', error);
+      }
+    }
+  }
 
   // 使用済みの state をセッションストレージから削除
   if (typeof globalThis !== 'undefined' && globalThis.sessionStorage) {
     globalThis.sessionStorage.removeItem(stateStorageKey);
   }
 
-  return { isSetupComplete: true };
+  return { isSetupComplete };
 };
 
 /**
