@@ -41,7 +41,7 @@
   - [x] 対応: 色分けロジックを過去（使った時間）/現在週/未来（残りの時間）に変更
   - [x] 対応: 過去は `bg-gray-300`、現在週は `bg-accent`、未来は `bg-gray-100` に変更
   - [x] 対応: 凡例も「未記録/イベントあり/今週」から「過去（使った時間）/今週/未来（残りの時間）」に変更
-  - [x] 対応: docs/requirements/pages/dashboard.md（ホーム要件）と OUTLINE.md を更新
+  - [x] 対応: docs/mvp/requirements/pages/dashboard.md（ホーム要件）と OUTLINE.md を更新
 - [x] 初期設定画面（Setup.vue）の機能実装
   - [x] 問題: フォーム入力が動作しない、保存処理が未実装
   - [x] 対応: フォームの双方向バインディング（v-model）を追加

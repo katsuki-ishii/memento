@@ -30,12 +30,12 @@
     - [x] ESLint + Prettier 設定（Vue/JS 用）
 - [x] 要件・UX確定
   - [x] スコープ整理
-    - [x] MVP / 非MVP を docs/requirements/mvp.md で切り分け
-    - [x] 用語集とユーザーストーリーを docs/requirements で確定
+    - [x] MVP / 非MVP を docs/mvp/requirements/mvp.md で切り分け
+    - [x] 用語集とユーザーストーリーを docs/mvp/requirements で確定
   - [x] UX成果物
-    - [x] 主要画面ラフ（docs/requirements/ux.md）
+    - [x] 主要画面ラフ（docs/mvp/requirements/ux.md）
     - [x] 非機能要件ドラフト（性能・コスト・監視）
-  - [x] ホーム/認証/初期設定/ホーム（認証済み）の遷移フローを docs/requirements/pages・screens.md・OUTLINE.md に反映
+  - [x] ホーム/認証/初期設定/ホーム（認証済み）の遷移フローを docs/mvp/requirements/pages・screens.md・OUTLINE.md に反映
 - [x] 設計
   - [x] データモデル
     - [x] DynamoDB 設計（PK/SK/GSI/TTL）

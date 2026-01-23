@@ -5,4 +5,4 @@
 - セキュリティ: Cognito トークン検証を API Gateway/Lambda で実施。PII をログに残さない。HTTPS 前提。
 - コスト: 月額最小を目標（Cognito/Lambda/DynamoDB の無料枠内運用を優先）。
 - 観測性: Lambda ログに requestId を含め、主要エラーは構造化ログで出力。
-- 保守性: ESM + JS、Prettier/ESLint で統一。ドキュメントは docs/requirements 配下で更新。
+- 保守性: ESM + JS、Prettier/ESLint で統一。ドキュメントは docs/mvp/requirements 配下で更新。
