@@ -6,8 +6,8 @@
 
 ## 明日やる候補
 
-- [ ] `/me/settings` の DynamoDB 永続化（GET/PATCH）
-- [ ] Lambda に DynamoDB 権限を付与（SAM Policies）
+- [x] `/me/settings` の DynamoDB 永続化（GET/PATCH）
+- [x] Lambda に DynamoDB 権限を付与（SAM Policies）
 - [ ] DTO バリデーション方針の決定（zod など）
 
 ## WBS（チェックリスト・3層）
@@ -99,7 +99,7 @@
     - [x] イベント取得中のフォーム無効化/エラー時トースト表示
     - [x] イベント保存/削除失敗時のトースト表示
     - [x] 設定フォーム骨組み（Setup）
-      - [x] username/birthYear/lifespan/weekStart/theme を profile ストアと双方向に接続（まだ API なし）
+      - [x] username/birthYear/lifespan/weekStart/theme を profile ストアと双方向に接続
       - [x] ストア同期後のフォーム表示整合を担保
 - [ ] バックエンド/API
   - [ ] 基盤
@@ -108,16 +108,16 @@
     - [ ] DTO バリデーション
   - [ ] 機能API
     - [ ] イベント CRUD 実装
-    - [ ] ユーザー設定 取得/更新
+    - [x] ユーザー設定 取得/更新
   - [ ] 認証/認可
     - [x] Cognito JWT 検証（API Gateway Authorizer + Lambda フォールバック）
     - [ ] RBAC/スコープ定義（必要なら）
 - [ ] デプロイ/インフラ
   - [ ] SAM で IaC セットアップ
-    - [ ] Cognito User Pool + App Client + ドメイン
-    - [ ] API Gateway (REST) ステージ/CORS
-    - [ ] Lambda 関数デプロイ（SAM）
-    - [ ] DynamoDB テーブル作成（PK/SK/GSI/TTL）
+    - [x] Cognito User Pool + App Client + ドメイン
+    - [x] API Gateway (REST) ステージ/CORS
+    - [x] Lambda 関数デプロイ（SAM）
+    - [x] DynamoDB テーブル作成（PK/SK/GSI/TTL）
   - [ ] CI/CD
     - [x] GitHub Actions (lint/format)
     - [ ] （任意）手動デプロイ手順メモ / 将来 CI へ統合
