@@ -57,7 +57,7 @@
   - [x] ランタイム確認
     - [x] `npm run dev` 起動確認
     - [x] `npm run test` 簡易実行
-- [ ] フロントエンド実装 (MVP)
+- [x] フロントエンド実装 (MVP)
   - [x] 基盤
     - [x] レイアウト/テーマ
       - [x] Appシェル（header/main/footer）とダッシュボード専用サイドナビ/ハンバーガーを組み込み
@@ -75,7 +75,7 @@
     - [x] ローカルセッション保持とリダイレクト後遷移（初期設定 or ダッシュボード）
     - [x] ログアウト: Cognito `/logout` リダイレクト + ローカルセッション/ストアクリア + トースト通知
     - [x] UI文言/ボタン: 最小限の説明とリンク整備（サインアップ・ログイン共通ボタン）
-  - [ ] UI修正
+  - [x] UI修正
     - [x] サイドメニューが表示されない
       - [x] 原因: SideNav が `showNavButton && navOpen` 条件でレンダリングされ、`navOpen` 初期値 false のまま。デスクトップではトグルボタンが md:hidden のため開けず常に非表示。
     - [x] 対応デバイス方針: PC ブラウザのみを対象。レスポンシブ対応は不要（既存実装は影響しない範囲で残置可）
@@ -83,8 +83,8 @@
     - [x] トークンリフレッシュ/エラーハンドリング
       - [x] refresh_token を使った更新処理の枠を authService に追加
       - [x] 失効時の再ログイン誘導とトースト表示
-  - [ ] 機能UI
-    - [ ] ライフグリッド表示
+  - [x] 機能UI
+    - [x] ライフグリッド表示
       - [x] ダミー週データを Pinia から供給し、現在週ハイライト/過去・未来色分けの骨組みを実装
       - [x] サマリー（記録週数・残り週数）は不要のため実装対象から除外
       - [x] `select-week` で選択週をストアに反映する
@@ -101,17 +101,17 @@
       - [x] username/birthYear/lifespan/weekStart/theme を profile ストアと双方向に接続
       - [x] ストア同期後のフォーム表示整合を担保
 - [ ] バックエンド/API
-  - [ ] 基盤
+  - [x] 基盤
     - [x] Lambda 雛形/共通ロガー/エラー応答
     - [x] SAM テンプレートで Cognito/API/Lambda を定義
-  - [ ] 機能API
+  - [x] 機能API
     - [x] イベント CRUD 実装
     - [x] ユーザー設定 取得/更新
   - [ ] 認証/認可
     - [x] Cognito JWT 検証（API Gateway Authorizer + Lambda フォールバック）
     - [ ] RBAC/スコープ定義（必要なら）
 - [ ] デプロイ/インフラ
-  - [ ] SAM で IaC セットアップ
+  - [x] SAM で IaC セットアップ
     - [x] Cognito User Pool + App Client + ドメイン
     - [x] API Gateway (REST) ステージ/CORS
     - [x] Lambda 関数デプロイ（SAM）
