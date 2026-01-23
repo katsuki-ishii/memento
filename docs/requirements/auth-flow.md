@@ -23,7 +23,7 @@ sequenceDiagram
   CG-->>FE: access_token, id_token, refresh_token, expires_in
   FE->>API: GET /me/settings (Bearer id_token)
   API-->>FE: settings (200, 未登録ならデフォルト)
-  FE-->>U: 設定なし → /setup、設定あり → /dashboard
+  FE-->>U: 設定なし → /setup、設定あり → /dashboard（ホーム）
 ```
 
 ## 失敗時フロー
@@ -43,8 +43,8 @@ sequenceDiagram
 ## ルーティング/ガード
 
 - 未認証: `/auth/start` 以外の保護ルートは `/` (ホーム) にリダイレクト。
-- 認証済みだが設定未完: `/dashboard` アクセス時に `/setup` へ誘導。
-- 認証済み＆設定済み: `/` や `/auth/start` に来た場合は `/dashboard` へリダイレクト。
+- 認証済みだが設定未完: `/dashboard`（ホーム）アクセス時に `/setup` へ誘導。
+- 認証済み＆設定済み: `/` や `/auth/start` に来た場合は `/dashboard`（ホーム）へリダイレクト。
 
 ## セキュリティ補足
 

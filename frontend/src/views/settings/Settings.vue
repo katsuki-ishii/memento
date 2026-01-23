@@ -110,7 +110,7 @@
           to="/dashboard"
           class="px-4 py-2 text-sm text-gray-600 underline underline-offset-4"
         >
-          ダッシュボードに戻る
+          ホームに戻る
         </RouterLink>
       </div>
     </div>

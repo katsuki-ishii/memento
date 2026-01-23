@@ -9,7 +9,7 @@
       <header class="space-y-2">
         <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">初期設定</p>
         <h1 class="text-3xl font-bold">プロフィールとライフグリッドの前提を入力</h1>
-        <p class="text-sm text-gray-600">保存後、ダッシュボードに進みます。</p>
+        <p class="text-sm text-gray-600">保存後、ホームに進みます。</p>
       </header>
 
       <!-- エラーメッセージ -->
@@ -96,7 +96,7 @@
           @click="handleSave"
         >
           <span v-if="loading">保存中...</span>
-          <span v-else>保存してダッシュボードへ</span>
+          <span v-else>保存してホームへ</span>
         </button>
         <RouterLink to="/" class="px-4 py-2 text-sm text-gray-600 underline underline-offset-4">
           ホームに戻る
@@ -249,7 +249,7 @@ const handleSave = async () => {
     // 認証ストアの設定完了フラグを更新
     authStore.markSetupComplete();
 
-    // ダッシュボードへ遷移
+    // ホームへ遷移
     await router.push({ name: 'dashboard' });
   } catch (error) {
     // エラーハンドリング

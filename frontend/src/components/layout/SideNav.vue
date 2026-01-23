@@ -1,6 +1,6 @@
 <!--
   サイドナビゲーションコンポーネント
-  ダッシュボードページで表示されるサイドメニューです
+  ホームページで表示されるサイドメニューです
   ナビゲーションリンクとログアウトボタンを含みます
 -->
 <template>
@@ -22,13 +22,13 @@
     <!-- ナビゲーションリンク -->
     <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted">ナビゲーション</p>
     <nav class="flex flex-col gap-2 text-sm">
-      <!-- ダッシュボードへのリンク -->
+      <!-- ホームへのリンク -->
       <RouterLink
         to="/dashboard"
         class="rounded-md px-3 py-2 transition hover:bg-surface"
         active-class="bg-surface font-semibold"
       >
-        ダッシュボード
+        ホーム
       </RouterLink>
       <!-- 設定ページへのリンク -->
       <RouterLink

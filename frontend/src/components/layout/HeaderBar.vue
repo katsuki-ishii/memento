@@ -7,7 +7,7 @@
   <header class="flex items-center border-b border-border bg-card/80 px-4 py-3 backdrop-blur">
     <!-- 左側: ナビゲーションボタンとロゴ -->
     <div class="flex flex-1 items-center gap-3">
-      <!-- サイドナビゲーションを開くボタン（ダッシュボードでのみ表示） -->
+      <!-- サイドナビゲーションを開くボタン（ホームでのみ表示） -->
       <button
         v-if="showNav"
         type="button"

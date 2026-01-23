@@ -1,5 +1,5 @@
 <!--
-  ダッシュボードページ
+  ホームページ
   アプリケーションのメインページです
   ライフグリッドを表示します
 -->
@@ -9,8 +9,8 @@
       <!-- ヘッダー -->
       <header class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
-          <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">ダッシュボード</p>
-          <h1 class="text-3xl font-bold">ダッシュボード</h1>
+          <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">ホーム</p>
+          <h1 class="text-3xl font-bold">ホーム</h1>
         </div>
       </header>
 
@@ -82,7 +82,7 @@ const selectedWeekLabel = computed(() => {
 
 /**
  * コンポーネントがマウントされた時にプロフィール情報を読み込む
- * 設定画面から戻ってきた場合や、直接ダッシュボードにアクセスした場合に対応
+ * 設定画面から戻ってきた場合や、直接ホームにアクセスした場合に対応
  * プロフィール情報の取得が完了してからグリッドを表示する
  */
 onMounted(async () => {

@@ -54,7 +54,7 @@ const router = useRouter();
 // サイドナビゲーションの開閉状態
 const navOpen = ref(false);
 
-// ダッシュボードページでのみナビゲーションボタンを表示
+// ホームページでのみナビゲーションボタンを表示
 const showNavButton = computed(() => route.name === 'dashboard');
 
 // ルートが変更されたらサイドナビを自動的に閉じる
