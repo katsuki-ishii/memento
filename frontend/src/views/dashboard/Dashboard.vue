@@ -38,16 +38,19 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGridStore } from '../../stores/grid';
+import { useProfileStore } from '../../stores/profile';
 import { useUiStore } from '../../stores/ui';
 import GridCanvas from './components/GridCanvas.vue';
 import EventDialog from './components/EventDialog.vue';
 import { listEvents, createEvent, updateEvent, deleteEvent } from '../../services/eventsService';
+import { getSettings } from '../../services/settingsService';
 
-// グリッドストア
+// ストア
 const grid = useGridStore();
+const profileStore = useProfileStore();
 const ui = useUiStore();
 const { eventsByWeek, selectedWeek } = storeToRefs(grid);
 
@@ -67,6 +70,27 @@ const selectedEvent = computed(() => {
 const selectedWeekLabel = computed(() => {
   if (!selectedWeek.value) return '未選択';
   return `${selectedWeek.value.year}年 第${selectedWeek.value.week + 1}週`;
+});
+
+/**
+ * コンポーネントがマウントされた時にプロフィール情報を読み込む
+ * 設定画面から戻ってきた場合や、直接ダッシュボードにアクセスした場合に対応
+ */
+onMounted(async () => {
+  try {
+    // プロフィール情報がまだ読み込まれていない場合は取得
+    if (!profileStore.profile) {
+      const settings = await getSettings();
+      if (settings) {
+        profileStore.setProfile(settings);
+      }
+    }
+  } catch (error) {
+    // エラーは無視（未設定の場合は後で初期設定画面にリダイレクトされる）
+    if (globalThis?.console) {
+      globalThis.console.error('Profile load error', error);
+    }
+  }
 });
 
 /**

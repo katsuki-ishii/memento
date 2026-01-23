@@ -118,11 +118,23 @@ export const useGridStore = defineStore('grid', () => {
 
   /**
    * モックデータが存在しない場合に生成
-   * データが既に存在する場合は何もしません
+   * プロフィール情報が利用可能な場合はそれを使用します
+   *
+   * @param {Object} profile - プロフィール情報（birthYear, lifespan を含む）
    */
-  const ensureMockData = () => {
-    if (weeks.value.length) return;
-    setWeeks(generateMockWeeks());
+  const ensureMockData = (profile = null) => {
+    // プロフィール情報から設定を取得
+    const lifespan = profile?.lifespan ?? 81;
+    const startYear = profile?.birthYear ?? 1990;
+
+    // 既存のデータがある場合でも、プロフィール情報が変更された場合は再生成
+    const shouldRegenerate =
+      !weeks.value.length ||
+      (profile && (weeks.value.length !== lifespan * 52 || weeks.value[0]?.year !== startYear));
+
+    if (shouldRegenerate) {
+      setWeeks(generateMockWeeks(lifespan, startYear));
+    }
   };
 
   return {

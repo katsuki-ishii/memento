@@ -48,24 +48,52 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useGridStore } from '../../../stores/grid';
+import { useProfileStore } from '../../../stores/profile';
 
 // イベント定義
 const emit = defineEmits(['select-week']);
 
-// グリッドストアからデータを取得
+// ストアからデータを取得
 const grid = useGridStore();
+const profileStore = useProfileStore();
 const { weeksByYear, currentWeekId } = storeToRefs(grid);
+const { profile } = storeToRefs(profileStore);
+
+/**
+ * プロフィール情報に基づいてグリッドを生成/再生成
+ */
+const generateGrid = () => {
+  // プロフィール情報が利用可能な場合はそれを使用、なければデフォルト値
+  if (profile.value?.birthYear && profile.value?.lifespan) {
+    grid.ensureMockData(profile.value);
+  } else {
+    // プロフィール情報がまだない場合はデフォルト値で生成
+    grid.ensureMockData();
+  }
+};
 
 /**
  * コンポーネントがマウントされた時に実行
  * モックデータが存在しない場合は生成します
  */
 onMounted(() => {
-  grid.ensureMockData();
+  generateGrid();
 });
+
+/**
+ * プロフィール情報が変更されたときにグリッドを再生成
+ * 設定保存後にグリッドが更新されるようにする
+ */
+watch(
+  () => [profile.value?.birthYear, profile.value?.lifespan],
+  () => {
+    generateGrid();
+  },
+  { deep: true }
+);
 
 /**
  * 配列を指定サイズのチャンクに分割

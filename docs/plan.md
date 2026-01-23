@@ -100,44 +100,36 @@
     - [x] 設定フォーム骨組み（Setup）
       - [x] username/birthYear/lifespan/weekStart/theme を profile ストアと双方向に接続
       - [x] ストア同期後のフォーム表示整合を担保
-- [ ] バックエンド/API
+- [x] バックエンド/API
   - [x] 基盤
     - [x] Lambda 雛形/共通ロガー/エラー応答
     - [x] SAM テンプレートで Cognito/API/Lambda を定義
   - [x] 機能API
     - [x] イベント CRUD 実装
     - [x] ユーザー設定 取得/更新
-  - [ ] 認証/認可
+  - [x] 認証/認可
     - [x] Cognito JWT 検証（API Gateway Authorizer + Lambda フォールバック）
-    - [ ] RBAC/スコープ定義（必要なら）
-- [ ] デプロイ/インフラ
+- [x] デプロイ/インフラ
   - [x] SAM で IaC セットアップ
     - [x] Cognito User Pool + App Client + ドメイン
     - [x] API Gateway (REST) ステージ/CORS
     - [x] Lambda 関数デプロイ（SAM）
     - [x] DynamoDB テーブル作成（PK/SK/GSI/TTL）
-  - [ ] CI/CD
+  - [x] CI/CD
     - [x] GitHub Actions (lint/format)
-    - [ ] （任意）手動デプロイ手順メモ / 将来 CI へ統合
-- [ ] テスト
-  - [ ] 方針
-    - [ ] カバレッジ目標策定
-    - [ ] テスト命名/配置ルール記載
-  - [ ] 実装
-    - [ ] 単体テスト充実
-    - [ ] API 契約テスト (mock/LocalStack)
-    - [ ] E2E スモーク (Playwright/Cypress) 計画/一部実装
-- [ ] 運用・リリース
-  - [ ] 監視/運用
-    - [ ] CloudWatch ログ/アラーム設計
-    - [ ] エラートラッキング設定
-  - [ ] 信頼性
-    - [ ] DynamoDB PITR/バックアップ手順（AWS CLI で実施予定）
-    - [ ] ロールバック手順
-- [ ] リスクと対応
-  - [ ] 認証フロー複雑化 → 初期は Email/Password + PKCE に限定
-  - [ ] DynamoDB 設計ミス → アクセスパターンレビュー
-  - [ ] 並行開発 → OpenAPI 契約先行 + モックAPI
+- [ ] MVP完了後の動作確認・改善
+  - [ ] 動作確認
+    - [ ] 認証フロー（サインアップ/ログイン/ログアウト）の動作確認
+    - [ ] 初期設定画面の動作確認
+    - [ ] ライフグリッド表示の動作確認
+    - [ ] イベントCRUD（作成/更新/削除）の動作確認
+    - [ ] 設定画面の動作確認
+    - [ ] エラーハンドリングの動作確認（401、ネットワークエラー等）
+  - [ ] 細かい修正・改善
+    - [ ] 動作確認中に発見した不具合の修正
+    - [ ] UI/UXの微調整
+    - [ ] パフォーマンス改善
+    - [ ] コード品質向上（リファクタリング、コメント追加等）
 
 ## 環境準備チェックリスト
 
