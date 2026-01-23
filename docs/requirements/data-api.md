@@ -40,7 +40,7 @@
 
 - weekId: JST、週開始は月曜。誕生日からの経過日数を7で割った整数。
 - id: Lambda 側で `EVENT#<timestamp>` を採番。
-- title/note: 長さ上限を設定（例: title 100文字、note 1000文字）。
+- title: 長さ上限を設定（例: 100文字）。
 - mood: 定義済み列挙に限定。
 
 ## データモデル

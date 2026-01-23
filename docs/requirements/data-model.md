@@ -48,6 +48,6 @@
 
 ## バリデーション指針
 
-- note: 長さ上限を設定（例: 1000文字）。
+- note: 長さ制限なし（現状）。
 - mood: 定義済みの列挙（例: very-bad〜very-good）。
 - username/birthYear/lifespan/weekStart を設定時に検証。
