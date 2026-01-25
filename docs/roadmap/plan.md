@@ -63,6 +63,27 @@
   - [ ] 記録
     - [ ] 実装内容をコミットメッセージに整理（実装手順の記録）
 
+- [x] 2026-01-25 本番環境デプロイ対応（CloudFront + localhost 両対応）
+  - [x] 問題の特定
+    - [x] CloudFrontからアクセス時にCognito認証後のリダイレクトがlocalhostに向かう問題
+    - [x] CORSエラー: API Gatewayが `localhost:5173` のみを許可していた問題
+  - [x] フロントエンド修正
+    - [x] `frontend/.env.local` から `VITE_COGNITO_REDIRECT_URI` / `VITE_COGNITO_LOGOUT_REDIRECT_URI` を削除
+    - [x] `authService.js` の `getRedirectUri()` が動的に `globalThis.location.origin` を使用するように
+    - [x] フロントエンドを再ビルドしてS3にデプロイ
+  - [x] バックエンド修正
+    - [x] `backend/src/lib/response.js` でカンマ区切りの複数CORSオリジンをサポート
+    - [x] `getOriginFromEvent()` ヘルパー関数を追加
+    - [x] 各ハンドラー（settings.js, events.js, health.js）でリクエストOriginを渡すように修正
+    - [x] `template.yaml` のAPI Gateway CORS preflight設定を `'*'` に変更
+    - [x] SAMデプロイ時に `CallbackUrls`, `LogoutUrls`, `CorsAllowOrigin` パラメータオーバーライドで複数URL指定
+  - [x] デプロイ手順のドキュメント化
+    - [x] `AGENTS.md` にフロントエンド・バックエンドのデプロイコマンドを追加
+    - [x] `.cursor/rules/core.mdc` にも同期
+  - [x] 動作確認
+    - [x] CloudFrontからログイン→ダッシュボード遷移が正常動作
+    - [x] localhostからも引き続き正常動作
+
 - [ ] 2026-01-25 グラフ可視化
 
 - [ ] 2026-01-25 データエクスポート

@@ -1,5 +1,5 @@
 import { createLogger } from '../lib/logger.js';
-import { emptyResponse, jsonResponse } from '../lib/response.js';
+import { emptyResponse, jsonResponse, getOriginFromEvent } from '../lib/response.js';
 import { getBearerToken, verifyAccessToken } from '../lib/auth.js';
 import {
   createEvent,
@@ -150,12 +150,13 @@ const buildUpdatePayload = (body) => {
 export const handler = async (event = {}) => {
   const requestId = event.requestContext?.requestId || 'unknown';
   const logger = createLogger(requestId);
+  const requestOrigin = getOriginFromEvent(event);
 
   try {
     const method = event.httpMethod || 'GET';
 
     if (method === 'OPTIONS') {
-      return emptyResponse();
+      return emptyResponse(204, { requestOrigin });
     }
 
     const { payload, bypassed, source } = await resolveAuth(event);
@@ -184,14 +185,16 @@ export const handler = async (event = {}) => {
           const items = await listEventsByWeek(payload.sub, weekId);
           return jsonResponse(
             200,
-            items.map((item) => normalizeEvent(item))
+            items.map((item) => normalizeEvent(item)),
+            { requestOrigin }
           );
         } else {
           // weekIdがない場合は全イベントを取得
           const items = await listAllEvents(payload.sub);
           return jsonResponse(
             200,
-            items.map((item) => normalizeEvent(item))
+            items.map((item) => normalizeEvent(item)),
+            { requestOrigin }
           );
         }
       }
@@ -200,7 +203,7 @@ export const handler = async (event = {}) => {
         const body = parseJsonBody(event) || {};
         const item = buildCreatePayload({ ...body, sub: payload.sub });
         const created = await createEvent(item);
-        return jsonResponse(200, normalizeEvent(created));
+        return jsonResponse(200, normalizeEvent(created), { requestOrigin });
       }
     }
 
@@ -209,16 +212,16 @@ export const handler = async (event = {}) => {
         const body = parseJsonBody(event) || {};
         const updates = buildUpdatePayload(body);
         const updated = await updateEvent(payload.sub, eventId, updates, Date.now());
-        return jsonResponse(200, normalizeEvent(updated));
+        return jsonResponse(200, normalizeEvent(updated), { requestOrigin });
       }
 
       if (method === 'DELETE') {
         await deleteEvent(payload.sub, eventId);
-        return emptyResponse();
+        return emptyResponse(204, { requestOrigin });
       }
     }
 
-    return jsonResponse(405, { message: 'Method Not Allowed' });
+    return jsonResponse(405, { message: 'Method Not Allowed' }, { requestOrigin });
   } catch (error) {
     logger.error('events request failed', {
       message: error?.message,
@@ -226,17 +229,17 @@ export const handler = async (event = {}) => {
     });
 
     if (isAuthError(error)) {
-      return jsonResponse(401, { message: 'Unauthorized' });
+      return jsonResponse(401, { message: 'Unauthorized' }, { requestOrigin });
     }
 
     if (error?.statusCode === 400) {
-      return jsonResponse(400, { message: error.message });
+      return jsonResponse(400, { message: error.message }, { requestOrigin });
     }
 
     if (error?.name === 'ConditionalCheckFailedException') {
-      return jsonResponse(404, { message: 'Not Found' });
+      return jsonResponse(404, { message: 'Not Found' }, { requestOrigin });
     }
 
-    return jsonResponse(500, { message: 'Internal Server Error' });
+    return jsonResponse(500, { message: 'Internal Server Error' }, { requestOrigin });
   }
 };

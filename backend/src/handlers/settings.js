@@ -1,5 +1,5 @@
 import { createLogger } from '../lib/logger.js';
-import { emptyResponse, jsonResponse } from '../lib/response.js';
+import { emptyResponse, jsonResponse, getOriginFromEvent } from '../lib/response.js';
 import { getBearerToken, verifyAccessToken } from '../lib/auth.js';
 import { getSettingsItem, updateSettingsItem } from '../lib/settingsStore.js';
 
@@ -146,12 +146,13 @@ const validateAndBuildUpdates = (payload) => {
 export const handler = async (event = {}) => {
   const requestId = event.requestContext?.requestId || 'unknown';
   const logger = createLogger(requestId);
+  const requestOrigin = getOriginFromEvent(event);
 
   try {
     const method = event.httpMethod || 'GET';
 
     if (method === 'OPTIONS') {
-      return emptyResponse();
+      return emptyResponse(204, { requestOrigin });
     }
 
     const { payload, bypassed, source } = await resolveAuth(event);
@@ -171,7 +172,7 @@ export const handler = async (event = {}) => {
 
     if (method === 'GET') {
       const item = await getSettingsItem(payload?.sub);
-      return jsonResponse(200, normalizeSettings(item));
+      return jsonResponse(200, normalizeSettings(item), { requestOrigin });
     }
 
     if (method === 'PATCH') {
@@ -179,10 +180,10 @@ export const handler = async (event = {}) => {
       const updates = validateAndBuildUpdates(body);
       const now = Date.now();
       const updated = await updateSettingsItem(payload?.sub, updates, now);
-      return jsonResponse(200, normalizeSettings(updated));
+      return jsonResponse(200, normalizeSettings(updated), { requestOrigin });
     }
 
-    return jsonResponse(405, { message: 'Method Not Allowed' });
+    return jsonResponse(405, { message: 'Method Not Allowed' }, { requestOrigin });
   } catch (error) {
     logger.error('settings request failed', {
       message: error?.message,
@@ -190,9 +191,9 @@ export const handler = async (event = {}) => {
     });
 
     if (isAuthError(error)) {
-      return jsonResponse(401, { message: 'Unauthorized' });
+      return jsonResponse(401, { message: 'Unauthorized' }, { requestOrigin });
     }
 
-    return jsonResponse(500, { message: 'Internal Server Error' });
+    return jsonResponse(500, { message: 'Internal Server Error' }, { requestOrigin });
   }
 };

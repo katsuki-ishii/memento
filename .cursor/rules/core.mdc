@@ -64,8 +64,8 @@ chcp 65001 > $null;
 
 - **デプロイ方法**: SAM CLIを使用
 - **ビルドコマンド**: `cd backend && sam build`
-- **デプロイコマンド**: `cd backend && sam deploy --stack-name memento-dev --resolve-s3 --capabilities CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides CallbackUrls=https://d1ney9ei4kzmv9.cloudfront.net/auth/callback LogoutUrls=https://d1ney9ei4kzmv9.cloudfront.net/auth/start CorsAllowOrigin=https://d1ney9ei4kzmv9.cloudfront.net`
-- **注意**: CognitoのコールバックURLとログアウトURLは本番環境（CloudFront）のURLを指定する必要がある
+- **デプロイコマンド**: `cd backend && sam deploy --stack-name memento-dev --resolve-s3 --capabilities CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset --parameter-overrides "CallbackUrls=https://d1ney9ei4kzmv9.cloudfront.net/auth/callback,http://localhost:5173/auth/callback" "LogoutUrls=https://d1ney9ei4kzmv9.cloudfront.net/auth/start,http://localhost:5173/auth/start" CorsAllowOrigin=https://d1ney9ei4kzmv9.cloudfront.net`
+- **注意**: CognitoのコールバックURLとログアウトURLは開発環境（localhost）と本番環境（CloudFront）の両方を登録する
 
 ## 詳細ガイドの参照
 
