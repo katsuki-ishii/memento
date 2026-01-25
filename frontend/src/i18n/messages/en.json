@@ -1,0 +1,177 @@
+{
+  "common": {
+    "actions": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "close": "Close",
+      "backHome": "Back to Home",
+      "backTop": "Back to Home"
+    },
+    "labels": {
+      "username": "Username",
+      "birthYear": "Birth year",
+      "lifespan": "Lifespan (years)",
+      "weekStart": "Week starts",
+      "theme": "Theme",
+      "language": "Language"
+    },
+    "placeholders": {
+      "username": "Memento User"
+    },
+    "weekStart": {
+      "mon": "Monday",
+      "sun": "Sunday"
+    },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "language": {
+      "ja": "Japanese",
+      "en": "English"
+    },
+    "status": {
+      "loading": "Loading...",
+      "saving": "Saving...",
+      "processing": "Processing..."
+    },
+    "format": {
+      "weekLabel": "Week {week}, {year}"
+    }
+  },
+  "nav": {
+    "sideMenu": "Side Menu",
+    "home": "Home",
+    "settings": "Settings",
+    "logout": "Log out"
+  },
+  "a11y": {
+    "sideNavLabel": "Side navigation",
+    "closeSideNav": "Close side menu",
+    "toggleNav": "Toggle side menu",
+    "toggleTheme": "Toggle theme",
+    "closeToast": "Dismiss toast"
+  },
+  "home": {
+    "hero": {
+      "primary": "Time is the most precious resource.",
+      "secondaryLine1": "Yet people live so long",
+      "secondaryLine2": "that they fail to recognize its value."
+    },
+    "subcopy": {
+      "line1": "Visualize life in weeks,",
+      "line2": "and reflect on time spent and time remaining."
+    },
+    "cta": {
+      "start": "Get started"
+    }
+  },
+  "login": {
+    "header": {
+      "label": "Auth"
+    },
+    "title": "Sign up / Log in",
+    "action": "Sign up / Log in",
+    "backHome": "Back to Home",
+    "callback": {
+      "title": "Signing you in...",
+      "description": "Processing the redirect from Cognito. Please wait a moment."
+    }
+  },
+  "setup": {
+    "header": {
+      "label": "Setup",
+      "title": "Set up your profile and lifespan",
+      "description": "After saving, you'll proceed to Home."
+    },
+    "actions": {
+      "saveAndHome": "Save and go to Home",
+      "backHome": "Back to Home"
+    }
+  },
+  "settings": {
+    "header": {
+      "label": "Settings",
+      "title": "Profile & Life Grid Settings",
+      "description": "Update your settings and save."
+    },
+    "saved": "Settings saved.",
+    "errors": {
+      "loadFailed": "Failed to load settings.",
+      "saveFailed": "Failed to save. Please try again."
+    }
+  },
+  "dashboard": {
+    "header": {
+      "label": "Home"
+    },
+    "selection": {
+      "none": "None selected",
+      "label": "Selected: {label}"
+    },
+    "legend": {
+      "past": "Past (time spent)",
+      "future": "Future (time remaining)",
+      "current": "This week",
+      "mood": "Mood for recorded weeks"
+    }
+  },
+  "events": {
+    "dialog": {
+      "subtitle": "Add or edit weekly record"
+    },
+    "fields": {
+      "title": "Title",
+      "mood": "Mood",
+      "note": "Note"
+    },
+    "placeholders": {
+      "title": "Enter a title for the week",
+      "note": "Add a note for the week (optional)"
+    },
+    "meta": {
+      "titleCount": "{count}/100",
+      "noteCount": "{count} chars"
+    },
+    "loading": "Loading events...",
+    "confirmDelete": "Delete this event?"
+  },
+  "errorPage": {
+    "label": "An error occurred",
+    "title": "Something went wrong",
+    "description": "A temporary issue occurred or the request could not be completed. Please try again later.",
+    "actions": {
+      "backDashboard": "Back to Home",
+      "backLanding": "Back to Home"
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "action": "Back to Home"
+  },
+  "unauthorized": {
+    "title": "Authentication required",
+    "action": "Go to login"
+  },
+  "toast": {
+    "authStartFailed": "Unable to start authentication",
+    "authFailed": "Authentication failed",
+    "loginSuccess": "Logged in",
+    "eventsLoadFailed": "Failed to load events",
+    "eventsSaveFailed": "Failed to save event",
+    "eventsDeleteFailed": "Failed to delete event",
+    "sessionExpired": "Session expired"
+  },
+  "errors": {
+    "required": "{field} is required.",
+    "maxLength": "{field} must be {max} characters or fewer.",
+    "birthYearRange": "Birth year must be between 1900 and {max}.",
+    "lifespanRange": "Lifespan must be between 1 and 150 years.",
+    "weekStartRequired": "Select the week start day.",
+    "retryLater": "Please try again later.",
+    "relogin": "Please log in again.",
+    "saveFailed": "Failed to save. Please try again.",
+    "loadFailed": "Failed to load."
+  }
+}

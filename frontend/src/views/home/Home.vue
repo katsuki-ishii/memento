@@ -19,10 +19,10 @@
         <h1
           class="animate-fade-in-up animation-delay-200 text-2xl font-medium leading-loose tracking-wide text-gray-900 opacity-0 md:text-3xl lg:text-4xl"
         >
-          <span class="block">時間はもっとも貴重なリソースです。</span>
+          <span class="block">{{ t('home.hero.primary') }}</span>
           <span class="mt-4 block">
-            しかし、人は寿命が長すぎて<br class="hidden sm:inline" />
-            その尊さを認識できていません。
+            {{ t('home.hero.secondaryLine1') }}<br class="hidden sm:inline" />
+            {{ t('home.hero.secondaryLine2') }}
           </span>
         </h1>
 
@@ -35,8 +35,8 @@
         <p
           class="animate-fade-in-up animation-delay-400 max-w-md text-base leading-relaxed text-gray-500 opacity-0 md:text-lg"
         >
-          人生を週単位で可視化し、<br />
-          すでに使った時間と、これからの時間を見つめ直しましょう。
+          {{ t('home.subcopy.line1') }}<br />
+          {{ t('home.subcopy.line2') }}
         </p>
 
         <!-- アクションボタン -->
@@ -45,7 +45,7 @@
             to="/auth/start"
             class="group inline-flex items-center gap-3 border-b border-gray-900 pb-2 text-sm tracking-wider text-gray-900 transition-all hover:gap-4 hover:border-gray-500 hover:text-gray-500"
           >
-            <span>はじめる</span>
+            <span>{{ t('home.cta.start') }}</span>
             <svg
               class="h-4 w-4 transition-transform group-hover:translate-x-1"
               fill="none"
@@ -73,6 +73,8 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const currentYear = computed(() => new Date().getFullYear());
+const { t } = useI18n();
 </script>

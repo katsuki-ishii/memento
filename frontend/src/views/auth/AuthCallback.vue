@@ -6,10 +6,8 @@
 <template>
   <main class="min-h-screen bg-white text-gray-900">
     <div class="mx-auto flex max-w-md flex-col gap-4 px-6 py-16 text-center">
-      <h1 class="text-2xl font-bold">認証処理中...</h1>
-      <p class="text-sm text-gray-600">
-        Cognito からのリダイレクトを処理しています。少々お待ちください。
-      </p>
+      <h1 class="text-2xl font-bold">{{ t('login.callback.title') }}</h1>
+      <p class="text-sm text-gray-600">{{ t('login.callback.description') }}</p>
     </div>
   </main>
 </template>
@@ -17,12 +15,14 @@
 <script setup>
 import { onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { handleCallback } from '../../services/authService';
 import { useUiStore } from '../../stores/ui';
 
 const route = useRoute();
 const router = useRouter();
 const ui = useUiStore();
+const { t } = useI18n();
 
 /**
  * コンポーネントがマウントされた時に実行
@@ -43,11 +43,11 @@ onMounted(async () => {
 
     // 初期設定の完了状態に応じて、ダッシュボードまたは初期設定ページへ遷移
     router.replace(result?.isSetupComplete ? { name: 'dashboard' } : { name: 'setup' });
-    ui.pushToast({ title: 'ログインしました', variant: 'success' });
+    ui.pushToast({ title: t('toast.loginSuccess'), variant: 'success' });
   } catch (err) {
     // エラーが発生した場合はエラーメッセージを表示して認証開始ページへ戻る
     ui.pushToast({
-      title: '認証に失敗しました',
+      title: t('toast.authFailed'),
       message: err?.reason || err?.message,
       variant: 'error',
     });

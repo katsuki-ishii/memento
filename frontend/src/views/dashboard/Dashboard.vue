@@ -9,7 +9,9 @@
       <!-- ヘッダー -->
       <header class="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
         <div>
-          <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">ホーム</p>
+          <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">
+            {{ t('dashboard.header.label') }}
+          </p>
         </div>
       </header>
 
@@ -21,11 +23,16 @@
           class="rounded-xl border border-gray-200 bg-gray-50 p-4 shadow-sm"
         >
           <GridCanvas @select-week="handleWeekSelect" />
-          <p class="mt-3 text-xs text-gray-500">選択中: {{ selectedWeekLabel }}</p>
+          <p class="mt-3 text-xs text-gray-500">
+            <span v-if="selectedWeekLabel">
+              {{ t('dashboard.selection.label', { label: selectedWeekLabel }) }}
+            </span>
+            <span v-else>{{ t('dashboard.selection.none') }}</span>
+          </p>
         </div>
         <!-- プロフィール情報読み込み中 -->
         <div v-else class="flex items-center justify-center p-8">
-          <p class="text-sm text-gray-500">読み込み中...</p>
+          <p class="text-sm text-gray-500">{{ t('common.status.loading') }}</p>
         </div>
       </section>
     </div>
@@ -46,6 +53,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import { useGridStore } from '../../stores/grid';
 import { useProfileStore } from '../../stores/profile';
 import { useUiStore } from '../../stores/ui';
@@ -58,6 +66,7 @@ import { getSettings } from '../../services/settingsService';
 const grid = useGridStore();
 const profileStore = useProfileStore();
 const ui = useUiStore();
+const { t } = useI18n();
 const { eventsByWeek, selectedWeek } = storeToRefs(grid);
 
 // ダイアログの状態
@@ -75,8 +84,11 @@ const selectedEvent = computed(() => {
 });
 
 const selectedWeekLabel = computed(() => {
-  if (!selectedWeek.value) return '未選択';
-  return `${selectedWeek.value.year}年 第${selectedWeek.value.week + 1}週`;
+  if (!selectedWeek.value) return null;
+  return t('common.format.weekLabel', {
+    year: selectedWeek.value.year,
+    week: selectedWeek.value.week + 1,
+  });
 });
 
 /**
@@ -150,8 +162,8 @@ watch(
       });
     } catch (error) {
       ui.pushToast({
-        title: 'イベントの取得に失敗しました',
-        message: '時間をおいて再度お試しください。',
+        title: t('toast.eventsLoadFailed'),
+        message: t('errors.retryLater'),
         variant: 'error',
       });
       if (globalThis?.console) {
@@ -210,8 +222,8 @@ const handleEventSave = async (eventData) => {
     handleDialogClose();
   } catch (error) {
     ui.pushToast({
-      title: 'イベントの保存に失敗しました',
-      message: '時間をおいて再度お試しください。',
+      title: t('toast.eventsSaveFailed'),
+      message: t('errors.retryLater'),
       variant: 'error',
     });
     if (globalThis?.console) {
@@ -250,8 +262,8 @@ const handleEventDelete = async (eventId) => {
     handleDialogClose();
   } catch (error) {
     ui.pushToast({
-      title: 'イベントの削除に失敗しました',
-      message: '時間をおいて再度お試しください。',
+      title: t('toast.eventsDeleteFailed'),
+      message: t('errors.retryLater'),
       variant: 'error',
     });
     if (globalThis?.console) {

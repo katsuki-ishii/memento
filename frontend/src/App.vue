@@ -23,9 +23,11 @@ import AppShell from './components/layout/AppShell.vue';
 import GlobalSpinner from './components/layout/GlobalSpinner.vue';
 import RouteProgress from './components/layout/RouteProgress.vue';
 import ToastStack from './components/layout/ToastStack.vue';
+import { useLocale } from './composables/useLocale';
 
 // UI 状態管理ストアを取得
 const ui = useUiStore();
+useLocale();
 
 // コンポーネントがマウントされた時（DOM に接続された時）に実行
 // ローカルストレージから保存されたテーマ設定を読み込んで適用します

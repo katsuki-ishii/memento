@@ -16,7 +16,7 @@
         class="mt-10 flex items-center gap-3 rounded-full bg-gray-900 px-4 py-2 text-white shadow-lg"
       >
         <span class="h-2 w-2 animate-pulse rounded-full bg-emerald-300" aria-hidden="true"></span>
-        <span class="text-sm font-medium">ページを読み込み中...</span>
+        <span class="text-sm font-medium">{{ t('common.status.loading') }}</span>
       </div>
     </div>
   </transition>
@@ -24,11 +24,13 @@
 
 <script setup>
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import { useUiStore } from '../../stores/ui';
 
 // UI ストアからルーティング状態を取得
 const ui = useUiStore();
 const { isRouting } = storeToRefs(ui);
+const { t } = useI18n();
 </script>
 
 <style scoped>

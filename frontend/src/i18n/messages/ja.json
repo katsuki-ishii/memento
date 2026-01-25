@@ -1,0 +1,177 @@
+{
+  "common": {
+    "actions": {
+      "save": "保存",
+      "cancel": "キャンセル",
+      "delete": "削除",
+      "close": "閉じる",
+      "backHome": "ホームに戻る",
+      "backTop": "トップに戻る"
+    },
+    "labels": {
+      "username": "ユーザー名",
+      "birthYear": "生年",
+      "lifespan": "寿命（年）",
+      "weekStart": "週開始",
+      "theme": "テーマ",
+      "language": "言語"
+    },
+    "placeholders": {
+      "username": "Memento User"
+    },
+    "weekStart": {
+      "mon": "月曜",
+      "sun": "日曜"
+    },
+    "theme": {
+      "light": "ライト",
+      "dark": "ダーク"
+    },
+    "language": {
+      "ja": "日本語",
+      "en": "English"
+    },
+    "status": {
+      "loading": "読み込み中...",
+      "saving": "保存中...",
+      "processing": "処理中です..."
+    },
+    "format": {
+      "weekLabel": "{year}年 第{week}週"
+    }
+  },
+  "nav": {
+    "sideMenu": "サイドメニュー",
+    "home": "ホーム",
+    "settings": "設定",
+    "logout": "ログアウト"
+  },
+  "a11y": {
+    "sideNavLabel": "サイドナビゲーション",
+    "closeSideNav": "サイドメニューを閉じる",
+    "toggleNav": "サイドメニューを開閉",
+    "toggleTheme": "テーマ切替",
+    "closeToast": "トーストを閉じる"
+  },
+  "home": {
+    "hero": {
+      "primary": "時間はもっとも貴重なリソースです。",
+      "secondaryLine1": "しかし、人は寿命が長すぎて",
+      "secondaryLine2": "その尊さを認識できていません。"
+    },
+    "subcopy": {
+      "line1": "人生を週単位で可視化し、",
+      "line2": "すでに使った時間と、これからの時間を見つめ直しましょう。"
+    },
+    "cta": {
+      "start": "はじめる"
+    }
+  },
+  "login": {
+    "header": {
+      "label": "認証"
+    },
+    "title": "サインアップ / ログイン",
+    "action": "サインアップ / ログイン",
+    "backHome": "トップに戻る",
+    "callback": {
+      "title": "認証処理中...",
+      "description": "Cognito からのリダイレクトを処理しています。少々お待ちください。"
+    }
+  },
+  "setup": {
+    "header": {
+      "label": "初期設定",
+      "title": "プロフィールと寿命を入力",
+      "description": "保存後、ホームに進みます。"
+    },
+    "actions": {
+      "saveAndHome": "保存してホームへ",
+      "backHome": "ホームに戻る"
+    }
+  },
+  "settings": {
+    "header": {
+      "label": "設定",
+      "title": "プロフィールとライフグリッドの設定",
+      "description": "設定を変更して保存できます。"
+    },
+    "saved": "設定を保存しました。",
+    "errors": {
+      "loadFailed": "設定の取得に失敗しました。",
+      "saveFailed": "保存に失敗しました。もう一度お試しください。"
+    }
+  },
+  "dashboard": {
+    "header": {
+      "label": "ホーム"
+    },
+    "selection": {
+      "none": "未選択",
+      "label": "選択中: {label}"
+    },
+    "legend": {
+      "past": "過去（使った時間）",
+      "future": "未来（残りの時間）",
+      "current": "今週",
+      "mood": "記録した週の幸福度や満足度"
+    }
+  },
+  "events": {
+    "dialog": {
+      "subtitle": "週の記録を追加・編集"
+    },
+    "fields": {
+      "title": "タイトル",
+      "mood": "感情スコア",
+      "note": "メモ"
+    },
+    "placeholders": {
+      "title": "週のタイトルを入力",
+      "note": "週のメモを入力（任意）"
+    },
+    "meta": {
+      "titleCount": "{count}/100",
+      "noteCount": "{count}文字"
+    },
+    "loading": "イベントを読み込み中...",
+    "confirmDelete": "このイベントを削除しますか？"
+  },
+  "errorPage": {
+    "label": "エラーが発生しました",
+    "title": "問題が発生しました",
+    "description": "一時的な問題が発生したか、リクエストを完了できませんでした。時間をおいて再度お試しください。",
+    "actions": {
+      "backDashboard": "ホームへ戻る",
+      "backLanding": "ホームへ"
+    }
+  },
+  "notFound": {
+    "title": "ページが見つかりません",
+    "action": "ホームに戻る"
+  },
+  "unauthorized": {
+    "title": "認証が必要です",
+    "action": "ログインへ進む"
+  },
+  "toast": {
+    "authStartFailed": "認証を開始できませんでした",
+    "authFailed": "認証に失敗しました",
+    "loginSuccess": "ログインしました",
+    "eventsLoadFailed": "イベントの取得に失敗しました",
+    "eventsSaveFailed": "イベントの保存に失敗しました",
+    "eventsDeleteFailed": "イベントの削除に失敗しました",
+    "sessionExpired": "セッションが切れました"
+  },
+  "errors": {
+    "required": "{field}は必須です",
+    "maxLength": "{field}は{max}文字以内で入力してください",
+    "birthYearRange": "生年は1900年から{max}年までの範囲で入力してください",
+    "lifespanRange": "寿命は1年から150年の範囲で入力してください",
+    "weekStartRequired": "週開始を選択してください",
+    "retryLater": "時間をおいて再度お試しください。",
+    "relogin": "再ログインしてください。",
+    "saveFailed": "保存に失敗しました。もう一度お試しください。",
+    "loadFailed": "読み込みに失敗しました。"
+  }
+}

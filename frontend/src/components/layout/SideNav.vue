@@ -6,21 +6,23 @@
 <template>
   <aside
     class="relative flex h-screen w-64 flex-col overflow-y-auto border-r border-border bg-card/90 px-4 py-6 backdrop-blur"
-    aria-label="サイドナビゲーション"
+    :aria-label="t('a11y.sideNavLabel')"
   >
     <!-- 閉じるボタン（モバイル表示時などに表示） -->
     <button
       v-if="showClose"
       type="button"
       class="absolute right-3 top-3 rounded-md border border-border px-2 py-1 text-xs font-medium text-primary transition hover:border-muted"
-      aria-label="サイドメニューを閉じる"
+      :aria-label="t('a11y.closeSideNav')"
       @click="emit('close')"
     >
       ✕
     </button>
 
     <!-- ナビゲーションリンク -->
-    <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted">サイドメニュー</p>
+    <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted">
+      {{ t('nav.sideMenu') }}
+    </p>
     <nav class="flex flex-col gap-2 text-sm">
       <!-- ホームへのリンク -->
       <RouterLink
@@ -28,7 +30,7 @@
         class="rounded-md px-3 py-2 transition hover:bg-surface"
         active-class="bg-surface font-semibold"
       >
-        ホーム
+        {{ t('nav.home') }}
       </RouterLink>
       <!-- 設定ページへのリンク -->
       <RouterLink
@@ -36,7 +38,7 @@
         class="rounded-md px-3 py-2 transition hover:bg-surface"
         active-class="bg-surface font-semibold"
       >
-        設定
+        {{ t('nav.settings') }}
       </RouterLink>
       <!-- ログアウトボタン -->
       <button
@@ -44,13 +46,15 @@
         class="mt-4 rounded-md px-3 py-2 text-left text-danger transition hover:bg-surface"
         @click="emit('logout')"
       >
-        ログアウト
+        {{ t('nav.logout') }}
       </button>
     </nav>
   </aside>
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n';
+
 // プロパティ定義
 defineProps({
   // 閉じるボタンを表示するかどうか
@@ -62,4 +66,5 @@ defineProps({
 
 // イベント定義
 const emit = defineEmits(['close', 'logout']);
+const { t } = useI18n();
 </script>

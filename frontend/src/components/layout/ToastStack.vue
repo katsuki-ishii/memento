@@ -30,7 +30,7 @@
           <button
             type="button"
             class="text-xs text-muted transition hover:text-primary"
-            aria-label="トーストを閉じる"
+            :aria-label="t('a11y.closeToast')"
             @click="dismiss(toast.id)"
           >
             ✕
@@ -43,12 +43,14 @@
 
 <script setup>
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import { useUiStore } from '../../stores/ui';
 
 // UI ストアからトーストのリストを取得
 // storeToRefs を使用することで、リアクティブ性を保ったまま取得できます
 const ui = useUiStore();
 const { toasts } = storeToRefs(ui);
+const { t } = useI18n();
 
 /**
  * トーストを閉じる

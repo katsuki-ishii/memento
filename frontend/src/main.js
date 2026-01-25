@@ -5,6 +5,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
+import { i18n } from './i18n';
 import './assets/main.css';
 
 // Vue アプリケーションインスタンスを作成
@@ -17,6 +18,9 @@ app.use(createPinia());
 // Vue Router（ルーティングライブラリ）をアプリケーションに登録
 // これにより、ページ遷移が可能になります
 app.use(router);
+
+// Vue i18n（多言語対応）を登録
+app.use(i18n);
 
 // アプリケーションを #app 要素にマウント（DOM に接続）
 // index.html 内の <div id="app"></div> にアプリケーションが表示されます

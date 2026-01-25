@@ -8,6 +8,7 @@ import { useAuthStore } from '../stores/auth';
 import { useProfileStore } from '../stores/profile';
 import { useUiStore } from '../stores/ui';
 import { getSettings } from './settingsService';
+import { i18n } from '../i18n';
 
 /**
  * ランダムなトークン文字列を生成
@@ -266,11 +267,12 @@ const refreshTokens = async ({ refreshToken }) => {
 const handleRefreshFailure = (error) => {
   const auth = useAuthStore();
   const ui = useUiStore();
+  const t = i18n.global.t;
 
   auth.clearSession();
   ui.pushToast({
-    title: 'セッションが切れました',
-    message: '再ログインしてください。',
+    title: t('toast.sessionExpired'),
+    message: t('errors.relogin'),
     variant: 'error',
   });
 

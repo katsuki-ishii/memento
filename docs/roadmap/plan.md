@@ -46,15 +46,15 @@
     - [x] `PATCH /me/settings` で `locale` を検証・保存
     - [x] バリデーション: `ja` / `en` 以外は 400
   - [ ] フロントエンド基盤
-    - [ ] Vue i18n を導入
-    - [ ] 翻訳辞書（`ja.json` / `en.json`）を作成
-    - [ ] 初期言語の判定ロジックを実装（保存値 → ブラウザ → `en`）
-    - [ ] `<html lang>` を `locale` に同期
+    - [x] Vue i18n を導入
+    - [x] 翻訳辞書（`ja.json` / `en.json`）を作成
+    - [x] 初期言語の判定ロジックを実装（保存値 → ブラウザ → `en`）
+    - [x] `<html lang>` を `locale` に同期
   - [ ] フロントエンドUI
-    - [ ] 設定画面に言語セレクトを追加（日本語 / English）
-    - [ ] 保存時に `locale` を `/me/settings` に送信
-    - [ ] 主要画面の文言をキー参照に置換（home/auth/setup/dashboard/settings）
-    - [ ] エラーメッセージ/トースト文言をキー参照に置換
+    - [x] 設定画面に言語セレクトを追加（日本語 / English）
+    - [x] 保存時に `locale` を `/me/settings` に送信
+    - [x] 主要画面の文言をキー参照に置換（home/auth/setup/dashboard/settings）
+    - [x] エラーメッセージ/トースト文言をキー参照に置換
   - [ ] 動作確認
     - [ ] 保存済み `locale` がある場合に即時反映される
     - [ ] 未設定時はブラウザ言語で初期化される

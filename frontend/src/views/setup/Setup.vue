@@ -7,15 +7,19 @@
   <main class="min-h-screen bg-white text-gray-900">
     <div class="mx-auto flex max-w-2xl flex-col gap-8 px-6 py-16">
       <header class="space-y-2">
-        <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">初期設定</p>
-        <h1 class="text-3xl font-bold">プロフィールと寿命を入力</h1>
-        <p class="text-sm text-gray-600">保存後、ホームに進みます。</p>
+        <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          {{ t('setup.header.label') }}
+        </p>
+        <h1 class="text-3xl font-bold">{{ t('setup.header.title') }}</h1>
+        <p class="text-sm text-gray-600">{{ t('setup.header.description') }}</p>
       </header>
 
       <!-- エラーメッセージ -->
       <div v-if="errors.length > 0" class="rounded-md border border-red-200 bg-red-50 p-4">
         <ul class="list-disc space-y-1 pl-5 text-sm text-red-700">
-          <li v-for="error in errors" :key="error">{{ error }}</li>
+          <li v-for="error in errors" :key="`${error.field}-${error.messageKey}`">
+            {{ t(error.messageKey, errorValues(error)) }}
+          </li>
         </ul>
       </div>
 
@@ -23,26 +27,26 @@
       <form class="grid grid-cols-1 gap-4 md:grid-cols-2" @submit.prevent="handleSave">
         <label class="space-y-1">
           <span class="text-sm font-medium text-gray-700">
-            ユーザー名 <span class="text-red-500">*</span>
+            {{ t('common.labels.username') }} <span class="text-red-500">*</span>
           </span>
           <input
             v-model="form.username"
             type="text"
             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            :class="{ 'border-red-300': errors.some((e) => e.includes('ユーザー名')) }"
-            placeholder="Memento User"
+            :class="{ 'border-red-300': hasFieldError('username') }"
+            :placeholder="t('common.placeholders.username')"
             maxlength="50"
           />
         </label>
         <label class="space-y-1">
           <span class="text-sm font-medium text-gray-700">
-            生年 <span class="text-red-500">*</span>
+            {{ t('common.labels.birthYear') }} <span class="text-red-500">*</span>
           </span>
           <input
             v-model.number="form.birthYear"
             type="number"
             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            :class="{ 'border-red-300': errors.some((e) => e.includes('生年')) }"
+            :class="{ 'border-red-300': hasFieldError('birthYear') }"
             placeholder="1990"
             min="1900"
             :max="currentYear"
@@ -50,13 +54,13 @@
         </label>
         <label class="space-y-1">
           <span class="text-sm font-medium text-gray-700">
-            寿命（年） <span class="text-red-500">*</span>
+            {{ t('common.labels.lifespan') }} <span class="text-red-500">*</span>
           </span>
           <input
             v-model.number="form.lifespan"
             type="number"
             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            :class="{ 'border-red-300': errors.some((e) => e.includes('寿命')) }"
+            :class="{ 'border-red-300': hasFieldError('lifespan') }"
             placeholder="85"
             min="1"
             max="150"
@@ -64,25 +68,25 @@
         </label>
         <label class="space-y-1">
           <span class="text-sm font-medium text-gray-700">
-            週開始 <span class="text-red-500">*</span>
+            {{ t('common.labels.weekStart') }} <span class="text-red-500">*</span>
           </span>
           <select
             v-model="form.weekStart"
             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
-            :class="{ 'border-red-300': errors.some((e) => e.includes('週開始')) }"
+            :class="{ 'border-red-300': hasFieldError('weekStart') }"
           >
-            <option value="mon">月曜</option>
-            <option value="sun">日曜</option>
+            <option value="mon">{{ t('common.weekStart.mon') }}</option>
+            <option value="sun">{{ t('common.weekStart.sun') }}</option>
           </select>
         </label>
         <label class="space-y-1 md:col-span-2">
-          <span class="text-sm font-medium text-gray-700">テーマ</span>
+          <span class="text-sm font-medium text-gray-700">{{ t('common.labels.theme') }}</span>
           <select
             v-model="form.theme"
             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400"
           >
-            <option value="light">ライト</option>
-            <option value="dark">ダーク</option>
+            <option value="light">{{ t('common.theme.light') }}</option>
+            <option value="dark">{{ t('common.theme.dark') }}</option>
           </select>
         </label>
       </form>
@@ -95,11 +99,11 @@
           class="rounded-md bg-gray-900 px-4 py-2 text-white shadow-sm transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50"
           @click="handleSave"
         >
-          <span v-if="loading">保存中...</span>
-          <span v-else>保存してホームへ</span>
+          <span v-if="loading">{{ t('common.status.saving') }}</span>
+          <span v-else>{{ t('setup.actions.saveAndHome') }}</span>
         </button>
         <RouterLink to="/" class="px-4 py-2 text-sm text-gray-600 underline underline-offset-4">
-          ホームに戻る
+          {{ t('setup.actions.backHome') }}
         </RouterLink>
       </div>
     </div>
@@ -109,6 +113,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useProfileStore } from '../../stores/profile';
 import { useAuthStore } from '../../stores/auth';
 import { updateSettings } from '../../services/settingsService';
@@ -116,6 +121,7 @@ import { updateSettings } from '../../services/settingsService';
 const router = useRouter();
 const profileStore = useProfileStore();
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 /**
  * プロフィール情報をフォーム用に正規化
@@ -192,28 +198,54 @@ const validateForm = () => {
 
   // ユーザー名のチェック
   if (!form.value.username || form.value.username.trim().length === 0) {
-    errors.value.push('ユーザー名は必須です');
+    errors.value.push({
+      field: 'username',
+      messageKey: 'errors.required',
+      values: { fieldKey: 'common.labels.username' },
+    });
   } else if (form.value.username.trim().length > 50) {
-    errors.value.push('ユーザー名は50文字以内で入力してください');
+    errors.value.push({
+      field: 'username',
+      messageKey: 'errors.maxLength',
+      values: { fieldKey: 'common.labels.username', max: 50 },
+    });
   }
 
   // 生年のチェック
   if (!form.value.birthYear) {
-    errors.value.push('生年は必須です');
+    errors.value.push({
+      field: 'birthYear',
+      messageKey: 'errors.required',
+      values: { fieldKey: 'common.labels.birthYear' },
+    });
   } else if (form.value.birthYear < 1900 || form.value.birthYear > currentYear.value) {
-    errors.value.push(`生年は1900年から${currentYear.value}年までの範囲で入力してください`);
+    errors.value.push({
+      field: 'birthYear',
+      messageKey: 'errors.birthYearRange',
+      values: { max: currentYear.value },
+    });
   }
 
   // 寿命のチェック
   if (!form.value.lifespan) {
-    errors.value.push('寿命は必須です');
+    errors.value.push({
+      field: 'lifespan',
+      messageKey: 'errors.required',
+      values: { fieldKey: 'common.labels.lifespan' },
+    });
   } else if (form.value.lifespan < 1 || form.value.lifespan > 150) {
-    errors.value.push('寿命は1年から150年の範囲で入力してください');
+    errors.value.push({
+      field: 'lifespan',
+      messageKey: 'errors.lifespanRange',
+    });
   }
 
   // 週開始のチェック
   if (!form.value.weekStart || !['mon', 'sun'].includes(form.value.weekStart)) {
-    errors.value.push('週開始を選択してください');
+    errors.value.push({
+      field: 'weekStart',
+      messageKey: 'errors.weekStartRequired',
+    });
   }
 
   return errors.value.length === 0;
@@ -244,7 +276,10 @@ const handleSave = async () => {
     await updateSettings(profileData);
 
     // プロフィールストアに保存
-    profileStore.setProfile(profileData);
+    profileStore.setProfile({
+      ...(profileStore.profile || {}),
+      ...profileData,
+    });
 
     // 認証ストアの設定完了フラグを更新
     authStore.markSetupComplete();
@@ -253,12 +288,20 @@ const handleSave = async () => {
     await router.push({ name: 'dashboard' });
   } catch (error) {
     // エラーハンドリング
-    errors.value.push('保存に失敗しました。もう一度お試しください。');
+    errors.value.push({ field: 'form', messageKey: 'errors.saveFailed' });
     if (globalThis?.console) {
       globalThis.console.error('Setup save error', error);
     }
   } finally {
     loading.value = false;
   }
+};
+
+const hasFieldError = (field) => errors.value.some((error) => error.field === field);
+
+const errorValues = (error) => {
+  const values = error?.values || {};
+  const { fieldKey, ...rest } = values;
+  return fieldKey ? { ...rest, field: t(fieldKey) } : rest;
 };
 </script>

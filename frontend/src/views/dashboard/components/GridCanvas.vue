@@ -8,16 +8,20 @@
     <!-- 凡例（グリッドの色の意味を説明） -->
     <div class="flex flex-wrap items-center gap-3 text-xs text-muted">
       <span class="inline-flex items-center gap-1">
-        <span class="h-4 w-4 rounded-sm bg-gray-200"></span> 過去（使った時間）
+        <span class="h-4 w-4 rounded-sm bg-gray-200"></span>
+        {{ t('dashboard.legend.past') }}
       </span>
       <span class="inline-flex items-center gap-1">
-        <span class="h-4 w-4 rounded-sm bg-gray-100"></span> 未来（残りの時間）
+        <span class="h-4 w-4 rounded-sm bg-gray-100"></span>
+        {{ t('dashboard.legend.future') }}
       </span>
       <span class="inline-flex items-center gap-1">
-        <span class="h-4 w-4 rounded-sm bg-accent"></span> 今週
+        <span class="h-4 w-4 rounded-sm bg-accent"></span>
+        {{ t('dashboard.legend.current') }}
       </span>
       <span class="inline-flex items-center gap-1">
-        <span class="h-4 w-4 rounded-sm bg-green-400"></span> 記録した週の幸福度や満足度
+        <span class="h-4 w-4 rounded-sm bg-green-400"></span>
+        {{ t('dashboard.legend.mood') }}
       </span>
     </div>
 
@@ -40,7 +44,7 @@
               type="button"
               class="h-4 w-4 rounded-sm transition hover:scale-110 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-1"
               :class="weekClass(week)"
-              :title="`${week.year}年 第${week.week + 1}週`"
+              :title="t('common.format.weekLabel', { year: week.year, week: week.week + 1 })"
               @click="emit('select-week', week)"
             />
           </div>
@@ -53,6 +57,7 @@
 <script setup>
 import { onMounted, watch } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import { useGridStore } from '../../../stores/grid';
 import { useProfileStore } from '../../../stores/profile';
 
@@ -64,6 +69,7 @@ const grid = useGridStore();
 const profileStore = useProfileStore();
 const { weeksByYear, currentWeekId, eventsByWeek } = storeToRefs(grid);
 const { profile } = storeToRefs(profileStore);
+const { t } = useI18n();
 
 /**
  * プロフィール情報に基づいてグリッドを生成/再生成

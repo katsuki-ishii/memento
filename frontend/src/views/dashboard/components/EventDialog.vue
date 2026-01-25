@@ -21,9 +21,16 @@
             <div class="flex items-center justify-between border-b border-gray-100 px-6 py-4">
               <div>
                 <h2 class="text-lg font-semibold text-gray-900">
-                  {{ selectedWeek ? `${selectedWeek.year}年 第${selectedWeek.week + 1}週` : '' }}
+                  {{
+                    selectedWeek
+                      ? t('common.format.weekLabel', {
+                          year: selectedWeek.year,
+                          week: selectedWeek.week + 1,
+                        })
+                      : ''
+                  }}
                 </h2>
-                <p class="mt-0.5 text-xs text-gray-500">週の記録を追加・編集</p>
+                <p class="mt-0.5 text-xs text-gray-500">{{ t('events.dialog.subtitle') }}</p>
               </div>
               <button
                 type="button"
@@ -46,23 +53,27 @@
               <!-- タイトル -->
               <div class="mb-4">
                 <label for="title" class="mb-1.5 block text-sm font-medium text-gray-700">
-                  タイトル
+                  {{ t('events.fields.title') }}
                 </label>
                 <input
                   id="title"
                   v-model="form.title"
                   type="text"
-                  placeholder="週のタイトルを入力"
+                  :placeholder="t('events.placeholders.title')"
                   maxlength="100"
                   :disabled="isLoading"
                   class="w-full rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:cursor-not-allowed disabled:opacity-60"
                 />
-                <p class="mt-1 text-xs text-gray-500">{{ form.title.length }}/100</p>
+                <p class="mt-1 text-xs text-gray-500">
+                  {{ t('events.meta.titleCount', { count: form.title.length }) }}
+                </p>
               </div>
 
               <!-- 感情スコア -->
               <div class="mb-4">
-                <label class="mb-1.5 block text-sm font-medium text-gray-700">感情スコア</label>
+                <label class="mb-1.5 block text-sm font-medium text-gray-700">
+                  {{ t('events.fields.mood') }}
+                </label>
                 <div class="flex gap-2">
                   <button
                     v-for="moodOption in moodOptions"
@@ -85,22 +96,24 @@
               <!-- メモ -->
               <div class="mb-6">
                 <label for="note" class="mb-1.5 block text-sm font-medium text-gray-700">
-                  メモ
+                  {{ t('events.fields.note') }}
                 </label>
                 <textarea
                   id="note"
                   v-model="form.note"
                   rows="4"
-                  placeholder="週のメモを入力（任意）"
+                  :placeholder="t('events.placeholders.note')"
                   :disabled="isLoading"
                   class="w-full resize-none rounded-md border border-gray-200 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:cursor-not-allowed disabled:opacity-60"
                 ></textarea>
-                <p class="mt-1 text-xs text-gray-500">{{ form.note.length }}文字</p>
+                <p class="mt-1 text-xs text-gray-500">
+                  {{ t('events.meta.noteCount', { count: form.note.length }) }}
+                </p>
               </div>
 
               <!-- ローディング表示 -->
               <div v-if="isLoading" class="mb-4 rounded-md border border-gray-200 bg-gray-50 p-2">
-                <p class="text-xs text-gray-600">イベントを読み込み中...</p>
+                <p class="text-xs text-gray-600">{{ t('events.loading') }}</p>
               </div>
 
               <!-- アクションボタン -->
@@ -112,7 +125,7 @@
                   :disabled="isLoading"
                   @click="handleDelete"
                 >
-                  削除
+                  {{ t('common.actions.delete') }}
                 </button>
                 <div v-else></div>
                 <div class="flex gap-2">
@@ -122,14 +135,14 @@
                     :disabled="isLoading"
                     @click="handleClose"
                   >
-                    キャンセル
+                    {{ t('common.actions.cancel') }}
                   </button>
                   <button
                     type="submit"
                     class="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
                     :disabled="isLoading"
                   >
-                    保存
+                    {{ t('common.actions.save') }}
                   </button>
                 </div>
               </div>
@@ -143,6 +156,7 @@
 
 <script setup>
 import { ref, watch, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
   isOpen: {
@@ -164,6 +178,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close', 'save', 'delete']);
+const { t } = useI18n();
 
 // フォーム状態
 const form = ref({
@@ -246,7 +261,7 @@ const handleSave = () => {
 const handleDelete = () => {
   if (!eventId.value || props.isLoading) return;
 
-  if (globalThis?.confirm?.('このイベントを削除しますか？')) {
+  if (globalThis?.confirm?.(t('events.confirmDelete'))) {
     emit('delete', eventId.value);
   }
 };

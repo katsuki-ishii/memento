@@ -14,7 +14,7 @@
       <!-- ローディングインジケーター -->
       <div class="flex items-center gap-3 rounded-full bg-gray-900 px-4 py-2 text-white shadow-lg">
         <span class="h-2 w-2 animate-ping rounded-full bg-accent" aria-hidden="true"></span>
-        <span class="text-sm font-medium">処理中です...</span>
+        <span class="text-sm font-medium">{{ t('common.status.processing') }}</span>
       </div>
     </div>
   </transition>
@@ -22,11 +22,13 @@
 
 <script setup>
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import { useUiStore } from '../../stores/ui';
 
 // UI ストアからローディング状態を取得
 const ui = useUiStore();
 const { isBusy } = storeToRefs(ui);
+const { t } = useI18n();
 </script>
 
 <style scoped>

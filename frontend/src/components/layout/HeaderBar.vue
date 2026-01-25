@@ -12,7 +12,7 @@
         v-if="showNav"
         type="button"
         class="rounded-md border border-border px-3 py-1 text-xs font-medium text-primary transition hover:border-muted"
-        aria-label="サイドメニューを開閉"
+        :aria-label="t('a11y.toggleNav')"
         @click="emitToggleNav"
       >
         ☰
@@ -28,7 +28,7 @@
       <button
         type="button"
         class="rounded-full border border-border px-3 py-1 text-xs font-medium text-primary transition hover:border-muted"
-        aria-label="テーマ切替"
+        :aria-label="t('a11y.toggleTheme')"
         @click="toggleTheme"
       >
         {{ theme === 'dark' ? '🌙' : '☀️' }}
@@ -39,6 +39,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useUiStore } from '../../stores/ui';
 
 // プロパティ定義
@@ -56,6 +57,7 @@ const emit = defineEmits(['toggle-nav']);
 // UI ストアからテーマ情報を取得
 const ui = useUiStore();
 const theme = computed(() => ui.theme);
+const { t } = useI18n();
 
 /**
  * テーマを切り替え

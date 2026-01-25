@@ -7,30 +7,34 @@
   <main class="min-h-screen bg-white text-gray-900">
     <div class="mx-auto flex max-w-md flex-col gap-6 px-6 py-16">
       <header class="space-y-2">
-        <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">認証</p>
-        <h1 class="text-3xl font-bold">サインアップ / ログイン</h1>
+        <p class="text-sm font-semibold uppercase tracking-wide text-gray-500">
+          {{ t('login.header.label') }}
+        </p>
+        <h1 class="text-3xl font-bold">{{ t('login.title') }}</h1>
       </header>
       <!-- 認証開始ボタン -->
       <button
         class="rounded-md bg-gray-900 px-4 py-2 text-white shadow-sm transition hover:bg-gray-800"
         @click="start"
       >
-        サインアップ / ログイン
+        {{ t('login.action') }}
       </button>
-      <RouterLink to="/" class="text-sm text-gray-600 underline underline-offset-4"
-        >トップに戻る</RouterLink
-      >
+      <RouterLink to="/" class="text-sm text-gray-600 underline underline-offset-4">{{
+        t('login.backHome')
+      }}</RouterLink>
     </div>
   </main>
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import { useUiStore } from '../../stores/ui';
 import { startHostedLogin } from '../../services/authService';
 
 const router = useRouter();
 const ui = useUiStore();
+const { t } = useI18n();
 
 /**
  * 認証フローを開始
@@ -60,7 +64,7 @@ const start = async () => {
   } catch (error) {
     // エラーが発生した場合はトースト通知で表示
     ui.pushToast({
-      title: '認証を開始できませんでした',
+      title: t('toast.authStartFailed'),
       message: error?.message,
       variant: 'error',
     });
