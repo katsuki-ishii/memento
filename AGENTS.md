@@ -47,6 +47,21 @@ chcp 65001 > $null;
 - 実行前提が不明な場合、推測で作業せず、**実行前に必ず質問して確認すること**。
 - 危険な操作（削除・破壊・上書き）は必ず確認を取る。
 
+## デプロイ
+
+### フロントエンド
+
+- **デプロイ先**: S3バケット `memento-web-app`
+- **ビルドコマンド**: `cd frontend && npm run build`
+- **デプロイコマンド**: `cd frontend && aws s3 sync dist/ s3://memento-web-app/ --delete`
+- **ビルド成果物**: `frontend/dist/` ディレクトリ
+
+### バックエンド
+
+- **デプロイ方法**: SAM CLIを使用
+- **ビルドコマンド**: `cd backend && sam build`
+- **デプロイコマンド**: `cd backend && sam deploy --stack-name memento-dev --resolve-s3 --capabilities CAPABILITY_IAM --no-confirm-changeset --no-fail-on-empty-changeset`
+
 ## このプロジェクトの性質
 
 - 趣味および学習目的の個人開発である。
