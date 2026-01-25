@@ -469,10 +469,10 @@ const handleDelete = () => {
 @keyframes sadMouth {
   0%,
   100% {
-    transform: translateY(0);
+    transform: scale(1.2) translateY(0);
   }
   50% {
-    transform: translateY(2px);
+    transform: scale(1.2) translateY(2px);
   }
 }
 
@@ -480,10 +480,10 @@ const handleDelete = () => {
   0%,
   90%,
   100% {
-    transform: scaleY(1);
+    transform: scale(1.2) scaleY(1);
   }
   95% {
-    transform: scaleY(0.1);
+    transform: scale(1.2) scaleY(0.1);
   }
 }
 
@@ -505,13 +505,13 @@ const handleDelete = () => {
 @keyframes happyBounce {
   0%,
   100% {
-    transform: translateY(0) rotate(0deg);
+    transform: scale(1.2) translateY(0) rotate(0deg);
   }
   25% {
-    transform: translateY(-3px) rotate(-2deg);
+    transform: scale(1.2) translateY(-3px) rotate(-2deg);
   }
   75% {
-    transform: translateY(-3px) rotate(2deg);
+    transform: scale(1.2) translateY(-3px) rotate(2deg);
   }
 }
 
