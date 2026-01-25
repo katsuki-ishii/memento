@@ -570,3 +570,116 @@ ref を使うケース
 - 単一画面でしか使わない state は composables または component 側に移動する。
 
 これらの基準をもとに、コンポーネントや composables、store の責務が適切に分担されているかを確認することを推奨する。
+
+## 16. 国際化（i18n）
+
+このプロジェクトでは **Vue I18n** を使用して多言語対応を実装している。
+
+### 基本方針
+
+- すべてのユーザー向けテキストは i18n メッセージとして定義する。
+- ハードコードされた文字列は避け、必ず `t()` 関数を使用する。
+- メッセージファイルは `src/i18n/messages/` に配置する。
+- 対応言語: `ja`（日本語）、`en`（英語）
+- フォールバックロケール: `en`
+
+### 使用方法
+
+#### コンポーネント内での使用
+
+```jsx
+<script setup>
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
+</script>
+
+<template>
+  <div>
+    <h1>{{ t('common.title') }}</h1>
+    <p>{{ t('common.description', { name: userName }) }}</p>
+  </div>
+</template>
+```
+
+#### ロケールの変更
+
+ロケールの変更は `useLocale` composable を使用する。
+
+```jsx
+import { useLocale } from '@/composables/useLocale';
+
+const { locale, setLocale } = useLocale();
+
+// ロケールを変更
+await setLocale('en');
+```
+
+### メッセージファイルの構造
+
+メッセージファイルは `src/i18n/messages/` に配置し、JSON 形式で定義する。
+
+```json
+{
+  "common": {
+    "title": "タイトル",
+    "actions": {
+      "save": "保存",
+      "cancel": "キャンセル"
+    }
+  },
+  "dashboard": {
+    "header": {
+      "label": "ホーム"
+    }
+  }
+}
+```
+
+### メッセージキーの命名規則
+
+- 階層構造を使用し、機能ごとにグループ化する。
+- キー名は kebab-case を使用する。
+- アクション系は `actions` 配下に、ラベル系は `label` 配下に配置する。
+
+```json
+{
+  "events": {
+    "dialog": {
+      "subtitle": "週次記録を追加または編集"
+    },
+    "fields": {
+      "title": "タイトル",
+      "mood": "ムード"
+    },
+    "actions": {
+      "save": "保存",
+      "delete": "削除"
+    }
+  }
+}
+```
+
+### パラメータ付きメッセージ
+
+動的な値を含むメッセージは、パラメータとして渡す。
+
+```jsx
+// メッセージ定義
+{
+  "common": {
+    "format": {
+      "weekLabel": "Week {week}, {year}"
+    }
+  }
+}
+
+// 使用例
+{{ t('common.format.weekLabel', { week: 3, year: 2026 }) }}
+```
+
+### 注意事項
+
+- メッセージキーは必ず存在することを確認する（存在しないキーは警告が表示される）。
+- 複数形や性別による変化が必要な場合は、Vue I18n の複数形機能を活用する。
+- 日付や数値のフォーマットは、Vue I18n のフォーマット機能を使用する。
