@@ -12,6 +12,7 @@ const isAuthError = (error) => {
 
 const WEEK_START_OPTIONS = new Set(['mon', 'sun']);
 const THEME_OPTIONS = new Set(['light', 'dark']);
+const LOCALE_OPTIONS = new Set(['ja', 'en']);
 
 const defaultSettings = () => ({
   username: '',
@@ -19,6 +20,7 @@ const defaultSettings = () => ({
   lifespan: 81,
   weekStart: 'mon',
   theme: 'light',
+  locale: null,
   createdAt: null,
   updatedAt: null,
 });
@@ -56,6 +58,7 @@ const normalizeSettings = (item = {}) => {
     lifespan: Number.isFinite(item.lifespan) ? item.lifespan : defaults.lifespan,
     weekStart: WEEK_START_OPTIONS.has(item.weekStart) ? item.weekStart : defaults.weekStart,
     theme: THEME_OPTIONS.has(item.theme) ? item.theme : defaults.theme,
+    locale: LOCALE_OPTIONS.has(item.locale) ? item.locale : defaults.locale,
     createdAt: Number.isFinite(item.createdAt) ? item.createdAt : defaults.createdAt,
     updatedAt: Number.isFinite(item.updatedAt) ? item.updatedAt : defaults.updatedAt,
   };
@@ -120,6 +123,15 @@ const validateAndBuildUpdates = (payload) => {
       throw error;
     }
     updates.theme = payload.theme;
+  }
+
+  if (Object.prototype.hasOwnProperty.call(payload, 'locale')) {
+    if (!LOCALE_OPTIONS.has(payload.locale)) {
+      const error = new Error('Invalid locale');
+      error.statusCode = 400;
+      throw error;
+    }
+    updates.locale = payload.locale;
   }
 
   if (Object.keys(updates).length === 0) {
