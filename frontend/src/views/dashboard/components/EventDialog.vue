@@ -80,15 +80,16 @@
                     :key="moodOption.value"
                     type="button"
                     :class="[
-                      'flex-1 rounded-md border px-3 py-2 text-sm transition',
+                      'mood-button flex-1 rounded-md border px-3 py-2 text-sm transition',
+                      `mood-${moodOption.value}`,
                       form.mood === moodOption.value
-                        ? 'border-gray-400 bg-gray-50 text-gray-900'
+                        ? 'border-gray-400 bg-gray-50 text-gray-900 mood-selected'
                         : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50',
                     ]"
                     :disabled="isLoading"
                     @click="form.mood = moodOption.value"
                   >
-                    {{ moodOption.label }}
+                    <span class="mood-emoji relative inline-block">{{ moodOption.label }}</span>
                   </button>
                 </div>
               </div>
@@ -293,5 +294,236 @@ const handleDelete = () => {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(10px);
+}
+
+/* ムードボタンのアニメーション */
+.mood-button {
+  position: relative;
+  overflow: visible;
+}
+
+.mood-emoji {
+  display: inline-block;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+
+/* ホバー時の拡大アニメーション */
+.mood-button:hover:not(:disabled) .mood-emoji {
+  transform: scale(1.2);
+}
+
+/* 選択時のアニメーション */
+.mood-selected .mood-emoji {
+  animation: moodPulse 0.4s ease;
+}
+
+/* 😢 very-bad: 涙が流れるアニメーション */
+.mood-very-bad .mood-emoji::before,
+.mood-very-bad .mood-emoji::after {
+  content: '💧';
+  position: absolute;
+  font-size: 0.5rem;
+  opacity: 0;
+}
+
+.mood-very-bad .mood-emoji::before {
+  left: 20%;
+  top: 10%;
+  animation-delay: 0s;
+}
+
+.mood-very-bad .mood-emoji::after {
+  left: 60%;
+  top: 10%;
+  animation-delay: 0.5s;
+}
+
+/* ホバー時と選択時にアニメーション開始 */
+.mood-very-bad:hover:not(:disabled) .mood-emoji::before,
+.mood-very-bad:hover:not(:disabled) .mood-emoji::after,
+.mood-very-bad.mood-selected .mood-emoji::before,
+.mood-very-bad.mood-selected .mood-emoji::after {
+  animation: tearDrop 2s infinite;
+}
+
+.mood-very-bad.mood-selected .mood-emoji::before,
+.mood-very-bad.mood-selected .mood-emoji::after {
+  animation-duration: 1s;
+}
+
+/* 😞 bad: 口が下がるアニメーション */
+/* ホバー時と選択時にアニメーション開始 */
+.mood-bad:hover:not(:disabled) .mood-emoji,
+.mood-bad.mood-selected .mood-emoji {
+  animation: sadMouth 2s ease-in-out infinite;
+}
+
+.mood-bad.mood-selected .mood-emoji {
+  animation:
+    sadMouth 1s ease-in-out infinite,
+    moodPulse 0.4s ease;
+}
+
+/* 😐 neutral: 微細な動き */
+/* ホバー時と選択時にアニメーション開始 */
+.mood-neutral:hover:not(:disabled) .mood-emoji,
+.mood-neutral.mood-selected .mood-emoji {
+  animation: neutralBlink 3s ease-in-out infinite;
+}
+
+/* 😊 good: 目がキラキラ */
+.mood-good .mood-emoji::before,
+.mood-good .mood-emoji::after {
+  content: '✨';
+  position: absolute;
+  font-size: 0.4rem;
+  opacity: 0;
+}
+
+.mood-good .mood-emoji::before {
+  left: 15%;
+  top: 20%;
+  animation-delay: 0s;
+}
+
+.mood-good .mood-emoji::after {
+  left: 70%;
+  top: 20%;
+  animation-delay: 0.8s;
+}
+
+/* ホバー時と選択時にアニメーション開始 */
+.mood-good:hover:not(:disabled) .mood-emoji::before,
+.mood-good:hover:not(:disabled) .mood-emoji::after,
+.mood-good.mood-selected .mood-emoji::before,
+.mood-good.mood-selected .mood-emoji::after {
+  animation: sparkle 2s infinite;
+}
+
+.mood-good.mood-selected .mood-emoji::before,
+.mood-good.mood-selected .mood-emoji::after {
+  animation-duration: 1s;
+}
+
+/* 😄 very-good: 目がキラキラ、口が大きく */
+.mood-very-good .mood-emoji::before,
+.mood-very-good .mood-emoji::after {
+  content: '✨';
+  position: absolute;
+  font-size: 0.5rem;
+  opacity: 0;
+}
+
+.mood-very-good .mood-emoji::before {
+  left: 10%;
+  top: 15%;
+  animation-delay: 0s;
+}
+
+.mood-very-good .mood-emoji::after {
+  left: 75%;
+  top: 15%;
+  animation-delay: 0.5s;
+}
+
+/* ホバー時と選択時にアニメーション開始 */
+.mood-very-good:hover:not(:disabled) .mood-emoji {
+  animation: happyBounce 2s ease-in-out infinite;
+}
+
+.mood-very-good:hover:not(:disabled) .mood-emoji::before,
+.mood-very-good:hover:not(:disabled) .mood-emoji::after,
+.mood-very-good.mood-selected .mood-emoji::before,
+.mood-very-good.mood-selected .mood-emoji::after {
+  animation: sparkle 1.5s infinite;
+}
+
+.mood-very-good.mood-selected .mood-emoji {
+  animation:
+    happyBounce 1s ease-in-out infinite,
+    moodPulse 0.4s ease;
+}
+
+.mood-very-good.mood-selected .mood-emoji::before,
+.mood-very-good.mood-selected .mood-emoji::after {
+  animation-duration: 0.8s;
+}
+
+/* アニメーション定義 */
+@keyframes tearDrop {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(150%) scale(1);
+  }
+}
+
+@keyframes sadMouth {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(2px);
+  }
+}
+
+@keyframes neutralBlink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+
+@keyframes sparkle {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5) rotate(180deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) rotate(360deg);
+  }
+}
+
+@keyframes happyBounce {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-3px) rotate(-2deg);
+  }
+  75% {
+    transform: translateY(-3px) rotate(2deg);
+  }
+}
+
+@keyframes moodPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+  100% {
+    transform: scale(1.2);
+  }
 }
 </style>
