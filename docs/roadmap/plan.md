@@ -41,10 +41,10 @@
     - [x] `docs/roadmap/2026-01-25_多言語対応/design.md` を作成
     - [x] 翻訳キーの命名ルールを確定（common/login/errors/toast）
   - [ ] バックエンド実装
-    - [ ] `UserSettings` に `locale` 属性を追加（永続化対応）
-    - [ ] `GET /me/settings` の `locale` 返却を追加
-    - [ ] `PATCH /me/settings` で `locale` を検証・保存
-    - [ ] バリデーション: `ja` / `en` 以外は 400
+    - [x] `UserSettings` に `locale` 属性を追加（永続化対応）
+    - [x] `GET /me/settings` の `locale` 返却を追加
+    - [x] `PATCH /me/settings` で `locale` を検証・保存
+    - [x] バリデーション: `ja` / `en` 以外は 400
   - [ ] フロントエンド基盤
     - [ ] Vue i18n を導入
     - [ ] 翻訳辞書（`ja.json` / `en.json`）を作成
